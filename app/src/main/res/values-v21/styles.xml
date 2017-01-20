@@ -1,0 +1,21 @@
+<resources>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="Toolbar.title" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">@dimen/title_textsize</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:letterSpacing">2.5</item>
+    </style>
+
+    <style name="Toolbar.title.expanded" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textSize">@dimen/title_textsize_expanded</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:letterSpacing">2.5</item>
+    </style>
+</resources>

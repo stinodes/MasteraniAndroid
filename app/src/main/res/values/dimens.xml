@@ -1,0 +1,9 @@
+<resources>
+    <dimen name="tool_bar_height">56dp</dimen>
+    <dimen name="app_bar_height">112dp</dimen>
+
+    <dimen name="margin">16dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="title_textsize">18dp</dimen>
+    <dimen name="title_textsize_expanded">24dp</dimen>
+</resources>

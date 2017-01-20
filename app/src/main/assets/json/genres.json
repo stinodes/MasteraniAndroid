@@ -1,0 +1,170 @@
+[
+  {
+    "id": 57,
+    "name": "Action"
+  },
+  {
+    "id": 58,
+    "name": "Adventure"
+  },
+  {
+    "id": 69,
+    "name": "Cars"
+  },
+  {
+    "id": 59,
+    "name": "Comedy"
+  },
+  {
+    "id": 84,
+    "name": "Dementia"
+  },
+  {
+    "id": 86,
+    "name": "Demons"
+  },
+  {
+    "id": 60,
+    "name": "Drama"
+  },
+  {
+    "id": 79,
+    "name": "Ecchi"
+  },
+  {
+    "id": 77,
+    "name": "Fantasy"
+  },
+  {
+    "id": 93,
+    "name": "Game"
+  },
+  {
+    "id": 89,
+    "name": "Harem"
+  },
+  {
+    "id": 82,
+    "name": "Historical"
+  },
+  {
+    "id": 71,
+    "name": "Horror"
+  },
+  {
+    "id": 66,
+    "name": "Josei"
+  },
+  {
+    "id": 95,
+    "name": "Kids"
+  },
+  {
+    "id": 88,
+    "name": "Magic"
+  },
+  {
+    "id": 75,
+    "name": "Martial Arts"
+  },
+  {
+    "id": 85,
+    "name": "Mecha"
+  },
+  {
+    "id": 83,
+    "name": "Military"
+  },
+  {
+    "id": 90,
+    "name": "Music"
+  },
+  {
+    "id": 63,
+    "name": "Mystery"
+  },
+  {
+    "id": 94,
+    "name": "Parody"
+  },
+  {
+    "id": 72,
+    "name": "Police"
+  },
+  {
+    "id": 73,
+    "name": "Psychological"
+  },
+  {
+    "id": 67,
+    "name": "Romance"
+  },
+  {
+    "id": 87,
+    "name": "Samurai"
+  },
+  {
+    "id": 78,
+    "name": "School"
+  },
+  {
+    "id": 61,
+    "name": "Sci-Fi"
+  },
+  {
+    "id": 70,
+    "name": "Seinen"
+  },
+  {
+    "id": 91,
+    "name": "Shoujo"
+  },
+  {
+    "id": 92,
+    "name": "Shoujo Ai"
+  },
+  {
+    "id": 64,
+    "name": "Shounen"
+  },
+  {
+    "id": 96,
+    "name": "Shounen Ai"
+  },
+  {
+    "id": 68,
+    "name": "Slice of Life"
+  },
+  {
+    "id": 62,
+    "name": "Space"
+  },
+  {
+    "id": 65,
+    "name": "Sports"
+  },
+  {
+    "id": 76,
+    "name": "Super Power"
+  },
+  {
+    "id": 80,
+    "name": "Supernatural"
+  },
+  {
+    "id": 74,
+    "name": "Thriller"
+  },
+  {
+    "id": 81,
+    "name": "Vampire"
+  },
+  {
+    "id": 98,
+    "name": "Yaoi"
+  },
+  {
+    "id": 97,
+    "name": "Yuri"
+  }
+]

@@ -1,4 +1,4 @@
-package com.anko.stinodes.ankoplication.mainactivity.homefragment.ui
+package com.anko.stinodes.ankoplication.mainactivity.homefragment.releasesfragment.ui
 
 import android.content.Context
 import android.os.Build

@@ -1,8 +1,8 @@
-package com.anko.stinodes.ankoplication.mainactivity.animefragment
+package com.anko.stinodes.ankoplication.mainactivity.homefragment.animefragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import com.anko.stinodes.ankoplication.mainactivity.animefragment.ui.AnimeFragmentUI
+import com.anko.stinodes.ankoplication.mainactivity.homefragment.animefragment.ui.AnimeFragmentUI
 
 class AnimeFragment(val args: Bundle): Fragment() {
 

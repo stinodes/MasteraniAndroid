@@ -1,8 +1,8 @@
-package com.anko.stinodes.ankoplication.mainactivity.animefragment.ui
+package com.anko.stinodes.ankoplication.mainactivity.homefragment.animefragment.ui
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import com.anko.stinodes.ankoplication.mainactivity.animefragment.AnimeFragment
+import com.anko.stinodes.ankoplication.mainactivity.homefragment.animefragment.AnimeFragment
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.matchParent

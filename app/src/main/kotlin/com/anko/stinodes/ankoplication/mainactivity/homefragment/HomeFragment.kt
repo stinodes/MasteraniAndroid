@@ -2,23 +2,25 @@ package com.anko.stinodes.ankoplication.mainactivity.homefragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
-import com.anko.stinodes.ankoplication.domain.Release
+import com.anko.stinodes.ankoplication.mainactivity.MainActivity
+import com.anko.stinodes.ankoplication.mainactivity.homefragment.HomeFragment.FragmentView.Anime
+import com.anko.stinodes.ankoplication.mainactivity.homefragment.HomeFragment.FragmentView.Releases
+import com.anko.stinodes.ankoplication.mainactivity.homefragment.animefragment.AnimeFragment
+import com.anko.stinodes.ankoplication.mainactivity.homefragment.releasesfragment.ReleasesFragment
 import com.anko.stinodes.ankoplication.mainactivity.homefragment.ui.HomeFragmentUI
-import io.realm.Realm
-import io.realm.Sort
 import org.jetbrains.anko.AnkoContext
-import kotlin.properties.Delegates
 
 class HomeFragment(val args: Bundle): Fragment() {
 
     val ui = HomeFragmentUI()
 
-    private var realm: Realm by Delegates.notNull()
+    enum class FragmentView {
+        Releases,
+        Anime
+    }
 
     companion object {
         fun create(bundle: Bundle = Bundle()): HomeFragment {
@@ -27,32 +29,32 @@ class HomeFragment(val args: Bundle): Fragment() {
         }
     }
 
-    init {
-        realm = Realm.getDefaultInstance()
-    }
-
-    override fun onCreateView(
-            inflater: LayoutInflater?,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = ui.createView(
-                AnkoContext.Companion.create(activity, this)
+                AnkoContext.create(activity, this)
         )
-        ui.recyclerView.adapter = ReleasesAdapter(
-                activity,
-                realm.where(Release::class.java).findAllSortedAsync("createdAt", Sort.DESCENDING),
-                { release ->
-                    //Todo: navigate
-                }
-        )
-        ui.recyclerView.layoutManager = GridLayoutManager(activity, 2, GridLayout.VERTICAL, false)
+
+        val adapter = HomeFragmentAdapter(childFragmentManager)
+                .add(getFragment(Releases), "Releases")
+                .add(getFragment(Anime), "Anime")
+        ui.pager.adapter = adapter
+        (activity as MainActivity).ui.tabs.setupWithViewPager(ui.pager)
 
         return view
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        realm.close()
+    override fun onResume() {
+        (activity as MainActivity).ui.expandTabs()
+        super.onResume()
+    }
+    override fun onPause() {
+        (activity as MainActivity).ui.collapseTabs()
+        super.onPause()
+    }
+
+    fun getFragment(view: HomeFragment.FragmentView, bundle: Bundle = Bundle()) = when(view) {
+        (Releases)-> ReleasesFragment.create(bundle)
+        (Anime)-> AnimeFragment.create(bundle)
+        else -> ReleasesFragment.create(bundle)
     }
 }

@@ -4,4 +4,5 @@
     <item name="releasesRecyclerView" type="id" />
     <item name="releaseWallpaper" type="id" />
     <item name="toolbarViewContainer" type="id" />
+    <item name="home_viewpager" type="id" />
 </resources>

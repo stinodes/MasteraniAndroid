@@ -1,14 +1,14 @@
-package com.anko.stinodes.ankoplication.mainactivity
+package com.anko.stinodes.ankoplication.mainactivity.homefragment
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 
-class MainActivityFragmentAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class HomeFragmentAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     val fragments: MutableList<Fragment> = mutableListOf()
     val titles: MutableList<String> = mutableListOf()
 
-    fun add(fr: Fragment, title: String): MainActivityFragmentAdapter {
+    fun add(fr: Fragment, title: String): HomeFragmentAdapter {
         fragments.add(fr)
         titles.add(title)
         return this

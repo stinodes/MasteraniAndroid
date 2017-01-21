@@ -1,9 +1,9 @@
-package com.anko.stinodes.ankoplication.mainactivity.homefragment
+package com.anko.stinodes.ankoplication.mainactivity.homefragment.releasesfragment
 
 import android.content.Context
 import android.view.ViewGroup
 import com.anko.stinodes.ankoplication.domain.Release
-import com.anko.stinodes.ankoplication.mainactivity.homefragment.ui.ReleaseViewHolderUI
+import com.anko.stinodes.ankoplication.mainactivity.homefragment.releasesfragment.ui.ReleaseViewHolderUI
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 import org.jetbrains.anko.AnkoContext

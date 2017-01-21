@@ -9,7 +9,7 @@ import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import com.anko.stinodes.ankoplication.R
-import com.anko.stinodes.ankoplication.mainactivity.animefragment.AnimeFragment
+import com.anko.stinodes.ankoplication.mainactivity.MainActivity.FragmentView.Home
 import com.anko.stinodes.ankoplication.mainactivity.detailfragment.DetailFragment
 import com.anko.stinodes.ankoplication.mainactivity.homefragment.HomeFragment
 import com.anko.stinodes.ankoplication.mainactivity.loginfragment.ToolbarLoginFragment
@@ -32,12 +32,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         ui.setContentView(this)
-
-        val adapter = MainActivityFragmentAdapter(supportFragmentManager)
-                .add(getFragment(FragmentView.Home), "Releases")
-                .add(getFragment(FragmentView.Anime), "Anime")
-        ui.viewPager.adapter = adapter
-        ui.tabLayout.setupWithViewPager(ui.viewPager)
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
@@ -62,10 +56,10 @@ class MainActivity : AppCompatActivity() {
                         ui.toolbarFragmentContainer.visibility = VISIBLE
                 }
         }
-
         fragmentManager.beginTransaction()
                 .add(R.id.toolbarViewContainer, ToolbarLoginFragment())
                 .commit()
+        navigate(Home)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -83,10 +77,17 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    fun navigate(fragment: FragmentView, bundle: Bundle = Bundle()) {
+        val f = getFragment(fragment, bundle)
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, f)
+                .addToBackStack(null)
+                .commit()
+    }
+
     fun getFragment(view: FragmentView, bundle: Bundle = Bundle()) = when(view) {
-        (FragmentView.Home)-> HomeFragment.create(bundle)
+        (Home)-> HomeFragment.create(bundle)
         (FragmentView.Detail)-> DetailFragment.create(bundle)
-        (FragmentView.Anime)-> AnimeFragment.create(bundle)
         else -> HomeFragment.create(bundle)
     }
 }

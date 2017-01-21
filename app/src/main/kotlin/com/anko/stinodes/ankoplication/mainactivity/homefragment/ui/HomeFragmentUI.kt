@@ -1,24 +1,30 @@
 package com.anko.stinodes.ankoplication.mainactivity.homefragment.ui
 
-import android.support.v7.widget.RecyclerView
+import android.support.v4.view.ViewPager
 import android.view.View
 import com.anko.stinodes.ankoplication.R
 import com.anko.stinodes.ankoplication.mainactivity.homefragment.HomeFragment
-import org.jetbrains.anko.*
-import org.jetbrains.anko.recyclerview.v7.recyclerView
+import org.jetbrains.anko.AnkoComponent
+import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.support.v4.viewPager
 
-class HomeFragmentUI() : AnkoComponent<HomeFragment> {
+class HomeFragmentUI: AnkoComponent<HomeFragment> {
 
-    lateinit var recyclerView: RecyclerView
+    companion object {
+        val VIEW_PAGER = R.id.home_viewpager
+    }
+    lateinit var pager: ViewPager
 
     override fun createView(ui: AnkoContext<HomeFragment>): View = with(ui) {
-        frameLayout {
-            lparams(width = matchParent, height = matchParent) {
-                backgroundResource = R.color.black
-                topPadding = dip(4)
+            viewPager {
+                id = VIEW_PAGER
+                lparams {
+                    width = matchParent
+                    height = matchParent
+
+                }
+                pager = this
             }
-            recyclerView = recyclerView {}
-                    .lparams(width = matchParent, height = matchParent) {}
-        }
     }
 }

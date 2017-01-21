@@ -1,10 +1,10 @@
-package com.anko.stinodes.ankoplication.mainactivity.homefragment
+package com.anko.stinodes.ankoplication.mainactivity.homefragment.releasesfragment
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.anko.stinodes.ankoplication.domain.Release
-import com.anko.stinodes.ankoplication.mainactivity.homefragment.ui.ReleaseViewHolderUI
+import com.anko.stinodes.ankoplication.mainactivity.homefragment.releasesfragment.ui.ReleaseViewHolderUI
 
 class ReleaseViewHolder(
         view: View,

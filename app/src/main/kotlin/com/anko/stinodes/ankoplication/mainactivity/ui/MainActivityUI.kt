@@ -7,7 +7,6 @@ import android.support.design.widget.CollapsingToolbarLayout
 import android.support.design.widget.CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PARALLAX
 import android.support.design.widget.TabLayout
 import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.animation.AlphaAnimation
@@ -18,6 +17,7 @@ import com.anko.stinodes.ankoplication.ext.CollapsingToolbar.lparams
 import com.anko.stinodes.ankoplication.ext.collapseMode
 import com.anko.stinodes.ankoplication.ext.dimenAttr
 import com.anko.stinodes.ankoplication.mainactivity.MainActivity
+import com.anko.stinodes.ankoplication.util.HeightAnimation
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import org.jetbrains.anko.*
@@ -26,7 +26,7 @@ import org.jetbrains.anko.design.appBarLayout
 import org.jetbrains.anko.design.collapsingToolbarLayout
 import org.jetbrains.anko.design.coordinatorLayout
 import org.jetbrains.anko.design.tabLayout
-import org.jetbrains.anko.support.v4.viewPager
+import kotlin.properties.Delegates
 
 
 class MainActivityUI: AnkoComponent<MainActivity> {
@@ -36,13 +36,15 @@ class MainActivityUI: AnkoComponent<MainActivity> {
         val FRAGMENT_CONT_ID = R.id.fragment_container
     }
 
+    lateinit var contentContainer: FrameLayout
     lateinit var toolbar: Toolbar
-    lateinit var tabLayout: TabLayout
-    lateinit var viewPager: ViewPager
     lateinit var appBar: AppBarLayout
     lateinit var appBarBackground: ImageView
     lateinit var appBarImage: ImageView
     lateinit var toolbarFragmentContainer: FrameLayout
+    lateinit var tabs: TabLayout
+
+    var toolbarHeight: Int by Delegates.notNull()
 
     val randomImageUrl: String
         get() {
@@ -55,6 +57,25 @@ class MainActivityUI: AnkoComponent<MainActivity> {
             val index = Math.floor(Math.random() * images.size).toInt()
             return images[index]
         }
+
+    fun collapseTabs() {
+        tabs.startAnimation(
+                HeightAnimation(
+                        tabs,
+                        0,
+                        300
+                )
+        )
+    }
+    fun expandTabs() {
+        tabs.startAnimation(
+                HeightAnimation(
+                        tabs,
+                        toolbarHeight,
+                        300
+                )
+        )
+    }
 
      fun showAppBarImage(context: Context, url: String = randomImageUrl) {
          val anim = AlphaAnimation(0f, 1f)
@@ -69,7 +90,6 @@ class MainActivityUI: AnkoComponent<MainActivity> {
                      override fun onError() {}
                  })
      }
-
     fun hideAppBarImage() {
         val anim = AlphaAnimation(1f, 0f)
         anim.duration = 300
@@ -80,6 +100,7 @@ class MainActivityUI: AnkoComponent<MainActivity> {
     override fun createView(ui: AnkoContext<MainActivity>): View  = with(ui) {
         coordinatorLayout {
             lparams(width = matchParent, height = matchParent)
+            toolbarHeight = dimen(R.dimen.tool_bar_height)
 
             appBar = appBarLayout {
                 id = APP_BAR_ID
@@ -124,18 +145,16 @@ class MainActivityUI: AnkoComponent<MainActivity> {
                         id = TOOLBAR_ID
                         popupTheme = R.style.AppTheme_PopupOverlay
                         setTitleTextAppearance(context, R.style.Toolbar_title)
-
                     }.lparams(
                             width = matchParent,
                             height = dimenAttr(R.attr.actionBarSize),
                             init = collapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN)
                     )
-
                 }.lparams(width = matchParent/*, height = dip(250)*/) {
                     scrollFlags = SCROLL_FLAG_SCROLL or SCROLL_FLAG_SNAP or SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
                 }
 
-                tabLayout = tabLayout {
+                tabs = tabLayout {
                     setSelectedTabIndicatorColor(
                             ContextCompat.getColor(context, R.color.colorPrimaryDark)
                     )
@@ -144,18 +163,18 @@ class MainActivityUI: AnkoComponent<MainActivity> {
                             ContextCompat.getColor(context, R.color.white2),
                             ContextCompat.getColor(context, R.color.white)
                     )
-                }.lparams(width = matchParent, height = dimenAttr(R.attr.actionBarSize)) {
+                    backgroundResource = R.color.red
+                }.lparams(width = matchParent, height = 0) {
                     scrollFlags = SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
                 }
             }.lparams(width = matchParent)
 
-            viewPager = viewPager {
+            contentContainer = frameLayout {
                 id = FRAGMENT_CONT_ID
                 backgroundResource = R.color.black
             }.lparams(width = matchParent, height = matchParent) {
                 behavior = AppBarLayout.ScrollingViewBehavior()
             }
-
         }
     }
 

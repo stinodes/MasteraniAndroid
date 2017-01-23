@@ -7,20 +7,37 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.anko.stinodes.ankoplication.domain.EpisodeParcelable
-import com.anko.stinodes.ankoplication.domain.Release
+import com.anko.stinodes.ankoplication.domain.detailedanime.DetailedAnime
+import com.anko.stinodes.ankoplication.domain.detailedanime.Episode
 import com.anko.stinodes.ankoplication.mainactivity.MainActivity
+import com.anko.stinodes.ankoplication.mainactivity.detailfragment.DetailFragment.FragmentView.Episodes
+import com.anko.stinodes.ankoplication.mainactivity.detailfragment.DetailFragment.FragmentView.Info
+import com.anko.stinodes.ankoplication.mainactivity.detailfragment.episodesfragment.EpisodesFragment
+import com.anko.stinodes.ankoplication.mainactivity.detailfragment.episodesfragment.InfoFragment
 import com.anko.stinodes.ankoplication.mainactivity.detailfragment.ui.DetailFragmentUI
+import com.anko.stinodes.ankoplication.mainactivity.homefragment.releasesfragment.ReleasesFragment
+import com.anko.stinodes.ankoplication.util.FragmentAdapter
 import com.anko.stinodes.ankoplication.web.IMAGE_URL
-import io.realm.Realm
+import com.anko.stinodes.ankoplication.web.MAWrapper
 import org.jetbrains.anko.AnkoContext
-import kotlin.properties.Delegates
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 
 class DetailFragment(val args: Bundle): Fragment() {
 
     val ui = DetailFragmentUI()
 
-    private var realm: Realm by Delegates.notNull()
-    lateinit var release: Release
+    enum class FragmentView {
+        Info,
+        Episodes
+    }
+
+    var anime: DetailedAnime? = null
+    lateinit var infoFragment: InfoFragment
+
+    var episode: Episode? = null
+    lateinit var episodesFragment: EpisodesFragment
+
 
     companion object {
         fun create(bundle: Bundle = Bundle()): DetailFragment {
@@ -29,9 +46,7 @@ class DetailFragment(val args: Bundle): Fragment() {
         }
     }
 
-    init {
-        realm = Realm.getDefaultInstance()
-    }
+    init {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,15 +55,13 @@ class DetailFragment(val args: Bundle): Fragment() {
                 .ui.appBar.setExpanded(true, true)
 
         val o: EpisodeParcelable = args.getParcelable("data")
-        realm.where(Release::class.java)
-                .equalTo("anime.id", o.animeId)
-                .equalTo("episode", o.episode)
-                .findFirstAsync()
-                .asObservable<Release>()
-                .filter(Release::isLoaded)
+        MAWrapper.get().api
+                .getDetailedAnimeId(o.animeId!!)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            bindRelease(it)
+                            bindData(it)
                         },
                         Throwable::printStackTrace
                 )
@@ -59,21 +72,43 @@ class DetailFragment(val args: Bundle): Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View {
-        return ui.createView(
+        val view = ui.createView(
                 AnkoContext.Companion.create(activity, this)
         )
-    }
+        infoFragment = getFragment(Info) as InfoFragment
+        episodesFragment = getFragment(Episodes) as EpisodesFragment
 
-    fun bindRelease(release: Release) {
-        Log.d("RELEASE DETAIL", "${release.episode}")
-        this.release = release
-        (activity as MainActivity)
-                .ui.showAppBarImage(activity, "${IMAGE_URL}wallpaper/2/${release.anime?.wallpaper!!}")
-    }
 
+        val adapter = FragmentAdapter(childFragmentManager)
+                .add(infoFragment, "Info")
+                .add(episodesFragment, "Episodes")
+        ui.pager.adapter = adapter
+
+        (activity as MainActivity).ui.expandTabs()
+
+        return view
+    }
+    override fun onResume() {
+        (activity as MainActivity).ui.tabs.setupWithViewPager(ui.pager)
+        super.onResume()
+    }
     override fun onDestroy() {
         (activity as MainActivity).ui.hideAppBarImage()
         super.onDestroy()
+    }
+
+    fun bindData(anime: DetailedAnime) {
+        this.anime = anime
+        Log.d("Detailed Anime", "${anime.info!!.title}")
+        (activity as MainActivity)
+                .ui.showAppBarImage(activity, "${IMAGE_URL}wallpaper/2/${anime.wallpapers!![0].file!!}")
+        infoFragment.bindData(anime.info!!)
+
+    }
+    fun getFragment(view: FragmentView, bundle: Bundle = Bundle()) = when(view) {
+        (Info)-> InfoFragment.create(bundle)
+        (Episodes)-> EpisodesFragment.create(bundle)
+        else -> ReleasesFragment.create(bundle)
     }
 
 }

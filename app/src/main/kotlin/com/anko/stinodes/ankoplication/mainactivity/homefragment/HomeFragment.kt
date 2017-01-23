@@ -11,6 +11,7 @@ import com.anko.stinodes.ankoplication.mainactivity.homefragment.HomeFragment.Fr
 import com.anko.stinodes.ankoplication.mainactivity.homefragment.animefragment.AnimeFragment
 import com.anko.stinodes.ankoplication.mainactivity.homefragment.releasesfragment.ReleasesFragment
 import com.anko.stinodes.ankoplication.mainactivity.homefragment.ui.HomeFragmentUI
+import com.anko.stinodes.ankoplication.util.FragmentAdapter
 import org.jetbrains.anko.AnkoContext
 
 class HomeFragment(val args: Bundle): Fragment() {
@@ -34,21 +35,23 @@ class HomeFragment(val args: Bundle): Fragment() {
                 AnkoContext.create(activity, this)
         )
 
-        val adapter = HomeFragmentAdapter(childFragmentManager)
+        val adapter = FragmentAdapter(childFragmentManager)
                 .add(getFragment(Releases), "Releases")
                 .add(getFragment(Anime), "Anime")
         ui.pager.adapter = adapter
-        (activity as MainActivity).ui.tabs.setupWithViewPager(ui.pager)
+
+        (activity as MainActivity).ui.expandTabs()
 
         return view
     }
 
     override fun onResume() {
-        (activity as MainActivity).ui.expandTabs()
+//        (activity as MainActivity).ui.expandTabs()
+        (activity as MainActivity).ui.tabs.setupWithViewPager(ui.pager)
         super.onResume()
     }
     override fun onPause() {
-        (activity as MainActivity).ui.collapseTabs()
+//        (activity as MainActivity).ui.collapseTabs()
         super.onPause()
     }
 

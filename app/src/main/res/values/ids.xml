@@ -5,4 +5,5 @@
     <item name="releaseWallpaper" type="id" />
     <item name="toolbarViewContainer" type="id" />
     <item name="home_viewpager" type="id" />
+    <item name="detail_viewpager" type="id" />
 </resources>

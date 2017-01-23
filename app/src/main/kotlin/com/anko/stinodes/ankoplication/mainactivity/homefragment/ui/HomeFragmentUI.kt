@@ -22,8 +22,8 @@ class HomeFragmentUI: AnkoComponent<HomeFragment> {
                 lparams {
                     width = matchParent
                     height = matchParent
-
                 }
+
                 pager = this
             }
     }

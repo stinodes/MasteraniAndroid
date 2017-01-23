@@ -84,7 +84,7 @@ class MAWrapper {
      */
     fun animeObservable(page: Int = 1, order: Order = Order.SCORE_DESC, genres: List<Int> = listOf())
             : Observable<Page<Anime>>
-            = api.getAnime(page, order.str, genres.joinToString(","))
+            = api.getAllAnime(page, order.str, genres.joinToString(","))
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
 

@@ -2,12 +2,12 @@ package com.anko.stinodes.ankoplication.mainactivity
 
 import android.os.Build
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View
 import com.anko.stinodes.ankoplication.R
 import com.anko.stinodes.ankoplication.mainactivity.MainActivity.FragmentView.Home
 import com.anko.stinodes.ankoplication.mainactivity.detailfragment.DetailFragment
@@ -36,26 +36,8 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        /**
-         * Listens for scrolling and fires when appbarlayout offset changes
-         * -> change opacity of widgets in appbarlayout
-         */
-        app_bar.addOnOffsetChangedListener {
-            appBarLayout, verticalOffset ->
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    val toolbarHeight = toolbar.measuredHeight.toFloat()
-                    val appBarHeight = appBarLayout.measuredHeightAndState.toFloat()
-                    val f = (verticalOffset / (appBarHeight - toolbarHeight * 2)) * 255
-                    val opacity = Math.max(Math.round(Math.max(255 + f, 0.1f)), 0)
-                    ui.appBarBackground.imageAlpha = opacity
-                    ui.toolbarFragmentContainer.alpha = (opacity.toFloat() / 255)
+        handleAppbarScrolling(ui.appBar)
 
-                    if (ui.toolbarFragmentContainer.visibility == VISIBLE && opacity <= 0)
-                        ui.toolbarFragmentContainer.visibility = GONE
-                    else if (ui.toolbarFragmentContainer.visibility == GONE && opacity > 0)
-                        ui.toolbarFragmentContainer.visibility = VISIBLE
-                }
-        }
         fragmentManager.beginTransaction()
                 .add(R.id.toolbarViewContainer, ToolbarLoginFragment())
                 .commit()
@@ -75,6 +57,32 @@ class MainActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun handleAppbarScrolling(appBar: AppBarLayout) {
+        /**
+         * Listens for scrolling and fires when appbarlayout offset changes
+         * -> change opacity of widgets in appbarlayout
+         */
+        appBar.addOnOffsetChangedListener {
+            appBarLayout, verticalOffset ->
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                val toolbarHeight = toolbar.measuredHeight.toFloat()
+                val appBarHeight = appBarLayout.measuredHeightAndState.toFloat()
+                val f = (verticalOffset / (appBarHeight - toolbarHeight * 2)) * 255
+                val opacity = Math.max(Math.round(Math.max(255 + f, 0.1f)), 0)
+                ui.appBarBackground.imageAlpha = opacity
+                ui.toolbarFragmentContainer.alpha = (opacity.toFloat() / 255)
+                if (ui.appBarImageVisible)
+                    ui.appBarImage.imageAlpha = opacity
+
+                if (ui.toolbarFragmentContainer.visibility == View.VISIBLE && opacity <= 0)
+                    ui.toolbarFragmentContainer.visibility = View.GONE
+                else if (ui.toolbarFragmentContainer.visibility == View.GONE && opacity > 0)
+                    ui.toolbarFragmentContainer.visibility = View.VISIBLE
+
+            }
+        }
     }
 
     fun navigate(fragment: FragmentView, bundle: Bundle = Bundle()) {

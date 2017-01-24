@@ -40,14 +40,12 @@ class HomeFragment(val args: Bundle): Fragment() {
                 .add(getFragment(Anime), "Anime")
         ui.pager.adapter = adapter
 
-        (activity as MainActivity).ui.expandTabs()
-
         return view
     }
 
     override fun onResume() {
-//        (activity as MainActivity).ui.expandTabs()
         (activity as MainActivity).ui.tabs.setupWithViewPager(ui.pager)
+        (activity as MainActivity).ui.expandTabs()
         super.onResume()
     }
     override fun onPause() {

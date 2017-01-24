@@ -1,6 +1,7 @@
 package com.anko.stinodes.ankoplication.mainactivity.ui
 
 import android.content.Context
+import android.os.Build
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.AppBarLayout.LayoutParams.*
 import android.support.design.widget.CollapsingToolbarLayout
@@ -43,6 +44,7 @@ class MainActivityUI: AnkoComponent<MainActivity> {
     lateinit var appBarImage: ImageView
     lateinit var toolbarFragmentContainer: FrameLayout
     lateinit var tabs: TabLayout
+    var appBarImageVisible = false
 
     var toolbarHeight: Int by Delegates.notNull()
 
@@ -78,6 +80,7 @@ class MainActivityUI: AnkoComponent<MainActivity> {
     }
 
      fun showAppBarImage(context: Context, url: String = randomImageUrl) {
+         appBarImageVisible = true
          val anim = AlphaAnimation(0f, 1f)
          anim.duration = 300
          anim.fillAfter = true
@@ -91,6 +94,7 @@ class MainActivityUI: AnkoComponent<MainActivity> {
                  })
      }
     fun hideAppBarImage() {
+        appBarImageVisible = false
         val anim = AlphaAnimation(1f, 0f)
         anim.duration = 300
         anim.fillAfter = true
@@ -105,11 +109,20 @@ class MainActivityUI: AnkoComponent<MainActivity> {
             appBar = appBarLayout {
                 id = APP_BAR_ID
                 backgroundResource = R.color.red
-                style { R.style.AppTheme_AppBarOverlay }
 
                 collapsingToolbarLayout {
                     setCollapsedTitleTextAppearance(R.style.Toolbar_title)
                     setExpandedTitleTextAppearance(R.style.Toolbar_title_expanded)
+
+                    toolbar = toolbar {
+                        id = TOOLBAR_ID
+                        setTitleTextAppearance(context, R.style.Toolbar_title)
+
+                    }.lparams(
+                            width = matchParent,
+                            height = dimenAttr(R.attr.actionBarSize),
+                            init = collapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN)
+                    )
 
                     appBarBackground = imageView {
                         scaleType = ImageView.ScaleType.CENTER_CROP
@@ -140,25 +153,15 @@ class MainActivityUI: AnkoComponent<MainActivity> {
                             height = matchParent,
                             init = collapseMode(COLLAPSE_MODE_PARALLAX)
                     )
-
-                    toolbar = toolbar {
-                        id = TOOLBAR_ID
-                        popupTheme = R.style.AppTheme_PopupOverlay
-                        setTitleTextAppearance(context, R.style.Toolbar_title)
-                    }.lparams(
-                            width = matchParent,
-                            height = dimenAttr(R.attr.actionBarSize),
-                            init = collapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN)
-                    )
                 }.lparams(width = matchParent/*, height = dip(250)*/) {
                     scrollFlags = SCROLL_FLAG_SCROLL or SCROLL_FLAG_SNAP or SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
                 }
 
                 tabs = tabLayout {
+                    setSelectedTabIndicatorHeight(dip(4))
                     setSelectedTabIndicatorColor(
                             ContextCompat.getColor(context, R.color.colorPrimaryDark)
                     )
-                    setSelectedTabIndicatorHeight(dip(4))
                     setTabTextColors(
                             ContextCompat.getColor(context, R.color.white2),
                             ContextCompat.getColor(context, R.color.white)
@@ -166,8 +169,9 @@ class MainActivityUI: AnkoComponent<MainActivity> {
                     backgroundResource = R.color.red
                 }.lparams(width = matchParent, height = 0) {
                     scrollFlags = SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+                    elevation = 0f
                 }
-            }.lparams(width = matchParent)
+            }.lparams(width = matchParent) {}
 
             contentContainer = frameLayout {
                 id = FRAGMENT_CONT_ID

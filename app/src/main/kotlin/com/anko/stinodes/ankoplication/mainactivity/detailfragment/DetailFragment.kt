@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.anko.stinodes.ankoplication.domain.EpisodeParcelable
 import com.anko.stinodes.ankoplication.domain.detailedanime.DetailedAnime
+import com.anko.stinodes.ankoplication.domain.detailedanime.DetailedAnimeInfo
 import com.anko.stinodes.ankoplication.domain.detailedanime.Episode
 import com.anko.stinodes.ankoplication.mainactivity.MainActivity
 import com.anko.stinodes.ankoplication.mainactivity.detailfragment.DetailFragment.FragmentView.Episodes
@@ -16,7 +17,6 @@ import com.anko.stinodes.ankoplication.mainactivity.detailfragment.episodesfragm
 import com.anko.stinodes.ankoplication.mainactivity.detailfragment.episodesfragment.InfoFragment
 import com.anko.stinodes.ankoplication.mainactivity.detailfragment.ui.DetailFragmentUI
 import com.anko.stinodes.ankoplication.mainactivity.homefragment.releasesfragment.ReleasesFragment
-import com.anko.stinodes.ankoplication.util.FragmentAdapter
 import com.anko.stinodes.ankoplication.web.IMAGE_URL
 import com.anko.stinodes.ankoplication.web.MAWrapper
 import org.jetbrains.anko.AnkoContext
@@ -78,18 +78,10 @@ class DetailFragment(val args: Bundle): Fragment() {
         infoFragment = getFragment(Info) as InfoFragment
         episodesFragment = getFragment(Episodes) as EpisodesFragment
 
-
-        val adapter = FragmentAdapter(childFragmentManager)
-                .add(infoFragment, "Info")
-                .add(episodesFragment, "Episodes")
-        ui.pager.adapter = adapter
-
-        (activity as MainActivity).ui.expandTabs()
-
         return view
     }
     override fun onResume() {
-        (activity as MainActivity).ui.tabs.setupWithViewPager(ui.pager)
+        (activity as MainActivity).ui.collapseTabs()
         super.onResume()
     }
     override fun onDestroy() {
@@ -102,9 +94,22 @@ class DetailFragment(val args: Bundle): Fragment() {
         Log.d("Detailed Anime", "${anime.info!!.title}")
         (activity as MainActivity)
                 .ui.showAppBarImage(activity, "${IMAGE_URL}wallpaper/2/${anime.wallpapers!![0].file!!}")
-        infoFragment.bindData(anime.info!!)
-
+        bindData(anime.info!!)
     }
+    fun bindData(anime: DetailedAnimeInfo) {
+        ui.titleView.text = anime.title
+        ui.infoField(
+                ui.infoContainer,
+                "Average Rating",
+                anime.scoreToString()
+        )
+        ui.infoField(
+                ui.infoContainer,
+                "Episodes",
+                anime.episodesToString()
+        )
+    }
+
     fun getFragment(view: FragmentView, bundle: Bundle = Bundle()) = when(view) {
         (Info)-> InfoFragment.create(bundle)
         (Episodes)-> EpisodesFragment.create(bundle)

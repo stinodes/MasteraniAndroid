@@ -23,10 +23,10 @@ class DetailedAnimeInfo {
 
     fun episodesToString(): String =
             if (episodeCount != null && episodeLength != null)
-                "${episodeCount} episodes of ${episodeLength} min."
+                "${episodeCount} eps of ${episodeLength} min."
             else if (episodeCount != null)
-                "${episodeCount} episodes"
+                "${episodeCount} eps"
             else if (episodeLength != null)
-                "episodes of ${episodeLength} min."
+                "eps of ${episodeLength} min."
             else "Not available."
 }

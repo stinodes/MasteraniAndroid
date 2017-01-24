@@ -1,6 +1,7 @@
 package com.anko.stinodes.ankoplication.mainactivity.detailfragment.infofragment.ui
 
 import android.graphics.Typeface
+import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.view.Gravity
 import android.view.View
@@ -30,7 +31,13 @@ class InfoFragmentUI: AnkoComponent<InfoFragment> {
                 }.lparams(width = matchParent)
 
                 infoContainer = verticalLayout {
-                }.lparams(width = matchParent)
+                    backgroundResource = R.color.black_overlay
+                    padding = dimen(R.dimen.margin)
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        elevation = 2f
+                }.lparams(width = matchParent) {
+                    margin = dimen(R.dimen.margin_small)
+                }
 
             }.lparams(width = matchParent) {
                 margin = dimen(R.dimen.margin)
@@ -59,7 +66,7 @@ class InfoFragmentUI: AnkoComponent<InfoFragment> {
                 lines = 1
                 textColor = ContextCompat.getColor(context, R.color.white2)
                 alpha = 0.9f
-                textSize = 16f
+                textSize = 14f
                 setTypeface(typeface, Typeface.NORMAL)
                 gravity = Gravity.END or Gravity.RIGHT
                 text = value

@@ -5,6 +5,10 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <!-- remove shadow below action bar -->
+        <item name="android:elevation">0dp</item>
+        <!-- Support library compatibility -->
+        <item name="elevation">0dp</item>
     </style>
 
     <style name="Toolbar.title" parent="@android:style/TextAppearance.Medium">

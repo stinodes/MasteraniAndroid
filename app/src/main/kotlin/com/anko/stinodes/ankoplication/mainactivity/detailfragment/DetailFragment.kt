@@ -2,6 +2,7 @@ package com.anko.stinodes.ankoplication.mainactivity.detailfragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +12,7 @@ import com.anko.stinodes.ankoplication.domain.detailedanime.DetailedAnime
 import com.anko.stinodes.ankoplication.domain.detailedanime.DetailedAnimeInfo
 import com.anko.stinodes.ankoplication.domain.detailedanime.Episode
 import com.anko.stinodes.ankoplication.mainactivity.MainActivity
-import com.anko.stinodes.ankoplication.mainactivity.detailfragment.DetailFragment.FragmentView.Episodes
-import com.anko.stinodes.ankoplication.mainactivity.detailfragment.DetailFragment.FragmentView.Info
-import com.anko.stinodes.ankoplication.mainactivity.detailfragment.episodesfragment.EpisodesFragment
-import com.anko.stinodes.ankoplication.mainactivity.detailfragment.episodesfragment.InfoFragment
 import com.anko.stinodes.ankoplication.mainactivity.detailfragment.ui.DetailFragmentUI
-import com.anko.stinodes.ankoplication.mainactivity.homefragment.releasesfragment.ReleasesFragment
 import com.anko.stinodes.ankoplication.web.IMAGE_URL
 import com.anko.stinodes.ankoplication.web.MAWrapper
 import org.jetbrains.anko.AnkoContext
@@ -33,10 +29,7 @@ class DetailFragment(val args: Bundle): Fragment() {
     }
 
     var anime: DetailedAnime? = null
-    lateinit var infoFragment: InfoFragment
-
     var episode: Episode? = null
-    lateinit var episodesFragment: EpisodesFragment
 
 
     companion object {
@@ -61,7 +54,7 @@ class DetailFragment(val args: Bundle): Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            bindData(it)
+                            bindDetailData(it)
                         },
                         Throwable::printStackTrace
                 )
@@ -71,15 +64,12 @@ class DetailFragment(val args: Bundle): Fragment() {
             inflater: LayoutInflater?,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View {
-        val view = ui.createView(
+    )
+            : View
+            = ui.createView(
                 AnkoContext.Companion.create(activity, this)
         )
-        infoFragment = getFragment(Info) as InfoFragment
-        episodesFragment = getFragment(Episodes) as EpisodesFragment
 
-        return view
-    }
     override fun onResume() {
         (activity as MainActivity).ui.collapseTabs()
         super.onResume()
@@ -89,14 +79,15 @@ class DetailFragment(val args: Bundle): Fragment() {
         super.onDestroy()
     }
 
-    fun bindData(anime: DetailedAnime) {
+    fun bindDetailData(anime: DetailedAnime) {
         this.anime = anime
         Log.d("Detailed Anime", "${anime.info!!.title}")
         (activity as MainActivity)
                 .ui.showAppBarImage(activity, "${IMAGE_URL}wallpaper/2/${anime.wallpapers!![0].file!!}")
-        bindData(anime.info!!)
+        bindDetailData(anime.info!!)
+        bindEpisodeData(anime.episodes!!)
     }
-    fun bindData(anime: DetailedAnimeInfo) {
+    fun bindDetailData(anime: DetailedAnimeInfo) {
         ui.titleView.text = anime.title
         ui.infoField(
                 ui.infoContainer,
@@ -109,11 +100,13 @@ class DetailFragment(val args: Bundle): Fragment() {
                 anime.episodesToString()
         )
     }
-
-    fun getFragment(view: FragmentView, bundle: Bundle = Bundle()) = when(view) {
-        (Info)-> InfoFragment.create(bundle)
-        (Episodes)-> EpisodesFragment.create(bundle)
-        else -> ReleasesFragment.create(bundle)
+    fun bindEpisodeData(episodes: List<Episode>) {
+        ui.episodeRecycler.adapter =
+                EpisodesAdapter(
+                        activity,
+                        episodes
+                )
+        ui.episodeRecycler.layoutManager =
+                LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
     }
-
 }

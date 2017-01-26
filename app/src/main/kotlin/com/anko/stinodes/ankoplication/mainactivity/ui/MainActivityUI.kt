@@ -132,7 +132,7 @@ class MainActivityUI: AnkoComponent<MainActivity> {
 
                     }.lparams(
                             width = matchParent,
-                            height = matchParent,
+                            height = dimen(R.dimen.tool_bar_image),
                             init = collapseMode(COLLAPSE_MODE_PARALLAX)
                     )
 

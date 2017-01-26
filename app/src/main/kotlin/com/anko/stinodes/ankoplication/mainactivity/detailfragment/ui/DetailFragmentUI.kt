@@ -3,6 +3,7 @@ package com.anko.stinodes.ankoplication.mainactivity.detailfragment.ui
 import android.graphics.Typeface
 import android.os.Build
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,7 @@ import android.widget.TextView
 import com.anko.stinodes.ankoplication.R
 import com.anko.stinodes.ankoplication.mainactivity.detailfragment.DetailFragment
 import org.jetbrains.anko.*
-import org.jetbrains.anko.support.v4.nestedScrollView
+import org.jetbrains.anko.recyclerview.v7.recyclerView
 
 class DetailFragmentUI: AnkoComponent<DetailFragment> {
 
@@ -20,32 +21,40 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
 
     lateinit var titleView: TextView
     lateinit var infoContainer: ViewGroup
+    lateinit var episodeRecycler: RecyclerView
 
     override fun createView(ui: AnkoContext<DetailFragment>): View = with(ui) {
-        nestedScrollView {
+        frameLayout {
             lparams(width = matchParent, height = matchParent)
-
             verticalLayout {
-                backgroundResource = R.color.red
-                padding = dimen(R.dimen.margin)
-
-                titleView = textView {
-                    lines = 1
-                    textSize = 22f
-                    setTypeface(typeface, Typeface.BOLD)
-                    textColor = ContextCompat.getColor(context, R.color.white)
-                    gravity = Gravity.CENTER
-                }.lparams(width = matchParent)
-
-                infoContainer = verticalLayout {
+                verticalLayout {
+                    backgroundResource = R.color.red
                     padding = dimen(R.dimen.margin)
-                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                        elevation = 2f
-                }.lparams(width = matchParent) {
-                    margin = dimen(R.dimen.margin_small)
-                }
 
-            }.lparams(width = matchParent) {}
+                    titleView = textView {
+                        lines = 1
+                        textSize = 22f
+                        setTypeface(typeface, Typeface.BOLD)
+                        textColor = ContextCompat.getColor(context, R.color.white)
+                        gravity = Gravity.CENTER
+                    }.lparams(width = matchParent)
+
+                    infoContainer = verticalLayout {
+                        padding = dimen(R.dimen.margin)
+                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                            elevation = 2f
+                    }.lparams(width = matchParent) {
+                        margin = dimen(R.dimen.margin_small)
+                    }
+
+                }.lparams(width = matchParent) {}
+
+                episodeRecycler = recyclerView {
+                    padding = dimen(R.dimen.margin)
+                }.lparams(width = matchParent, height = wrapContent) {
+                    weight = 1f
+                }
+            }.lparams(width = matchParent, height = matchParent)
         }
     }
 

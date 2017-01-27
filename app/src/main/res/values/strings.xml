@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name"><MosterOni class="me"></MosterOni></string>
+    <string name="app_name">Masterani.me</string>
     <string name="action_settings">Settings</string>
     <string name="releases_title">Releases</string>
     <string name="sign_in">Sign In</string>

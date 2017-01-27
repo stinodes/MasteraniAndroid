@@ -6,5 +6,5 @@
     <dimen name="margin_small">8dp</dimen>
     <dimen name="title_textsize">18dp</dimen>
     <dimen name="title_textsize_expanded">24dp</dimen>
-    <dimen name="tool_bar_image">350dp</dimen>
+    <dimen name="tool_bar_image">160dp</dimen>
 </resources>

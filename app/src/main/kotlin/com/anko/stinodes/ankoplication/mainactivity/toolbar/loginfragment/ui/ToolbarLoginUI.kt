@@ -1,4 +1,4 @@
-package com.anko.stinodes.ankoplication.mainactivity.loginfragment.ui
+package com.anko.stinodes.ankoplication.mainactivity.toolbar.loginfragment.ui
 
 import android.os.Build
 import android.support.v4.content.ContextCompat
@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.EditText
 import com.anko.stinodes.ankoplication.R
 import com.anko.stinodes.ankoplication.domain.Credentials
-import com.anko.stinodes.ankoplication.mainactivity.loginfragment.ToolbarLoginFragment
+import com.anko.stinodes.ankoplication.mainactivity.toolbar.loginfragment.ToolbarLoginFragment
 import org.jetbrains.anko.*
 
 class ToolbarLoginUI(val onSubmit: (Credentials) -> Unit): AnkoComponent<ToolbarLoginFragment> {

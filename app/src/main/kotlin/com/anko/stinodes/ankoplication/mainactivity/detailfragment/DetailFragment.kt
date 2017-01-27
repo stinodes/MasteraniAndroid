@@ -12,7 +12,9 @@ import com.anko.stinodes.ankoplication.domain.detailedanime.DetailedAnime
 import com.anko.stinodes.ankoplication.domain.detailedanime.DetailedAnimeInfo
 import com.anko.stinodes.ankoplication.domain.detailedanime.Episode
 import com.anko.stinodes.ankoplication.mainactivity.MainActivity
+import com.anko.stinodes.ankoplication.mainactivity.MainActivity.FragmentView.Detail
 import com.anko.stinodes.ankoplication.mainactivity.detailfragment.ui.DetailFragmentUI
+import com.anko.stinodes.ankoplication.mainactivity.toolbar.toolbarimagefragment.ToolbarImageFragment
 import com.anko.stinodes.ankoplication.web.IMAGE_URL
 import com.anko.stinodes.ankoplication.web.MAWrapper
 import org.jetbrains.anko.AnkoContext
@@ -22,13 +24,11 @@ import rx.schedulers.Schedulers
 class DetailFragment(val args: Bundle): Fragment() {
 
     val ui = DetailFragmentUI()
+    var toolbarImageFragment: ToolbarImageFragment? = null
 
-    enum class FragmentView {
-        Info,
-        Episodes
-    }
 
     var anime: DetailedAnime? = null
+    var selectedEpisode: Int? = null
     var episode: Episode? = null
 
 
@@ -44,10 +44,9 @@ class DetailFragment(val args: Bundle): Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (activity as MainActivity)
-                .ui.appBar.setExpanded(true, true)
-
         val o: EpisodeParcelable = args.getParcelable("data")
+        selectedEpisode = o.episode
+
         MAWrapper.get().api
                 .getDetailedAnimeId(o.animeId!!)
                 .subscribeOn(Schedulers.newThread())
@@ -64,28 +63,44 @@ class DetailFragment(val args: Bundle): Fragment() {
             inflater: LayoutInflater?,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    )
-            : View
-            = ui.createView(
+    ): View {
+        val view = ui.createView(
                 AnkoContext.Companion.create(activity, this)
         )
 
+        return view
+    }
+
     override fun onResume() {
-        (activity as MainActivity).ui.collapseTabs()
+        with (activity as MainActivity) {
+            if (toolbarImageFragment == null) {
+                toolbarImageFragment =
+                        (activity as MainActivity)
+                                .getToolbarFragment(Detail) as ToolbarImageFragment
+
+                setToolbarFragment(toolbarImageFragment)
+            }
+
+            ui.collapseTabs()
+            ui.appBar.setExpanded(true, true)
+        }
         super.onResume()
     }
+
     override fun onDestroy() {
-        (activity as MainActivity).ui.hideAppBarImage()
         super.onDestroy()
     }
 
     fun bindDetailData(anime: DetailedAnime) {
         this.anime = anime
         Log.d("Detailed Anime", "${anime.info!!.title}")
-        (activity as MainActivity)
-                .ui.showAppBarImage(activity, "${IMAGE_URL}wallpaper/2/${anime.wallpapers!![0].file!!}")
+
         bindDetailData(anime.info!!)
         bindEpisodeData(anime.episodes!!)
+        bindToolbarImage(anime.getWallpaper().file!!)
+
+        if (selectedEpisode != null)
+            ui.episodeRecycler.layoutManager.scrollToPosition(selectedEpisode!!)
     }
     fun bindDetailData(anime: DetailedAnimeInfo) {
         ui.titleView.text = anime.title
@@ -108,5 +123,11 @@ class DetailFragment(val args: Bundle): Fragment() {
                 )
         ui.episodeRecycler.layoutManager =
                 LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+    }
+    fun bindToolbarImage(url: String) {
+        if (toolbarImageFragment != null )
+            toolbarImageFragment!!.setImage(
+                    "${IMAGE_URL}wallpaper/2/$url"
+            )
     }
 }

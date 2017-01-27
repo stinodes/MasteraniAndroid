@@ -24,8 +24,7 @@ class ReleaseViewHolderUI(): AnkoComponent<ViewGroup> {
         if (image != null && release != null)
             Picasso.with(context)
                     .load("${IMAGE_URL}wallpaper/2/${release!!.anime?.wallpaper}")
-                    .centerCrop()
-                    .resize(178, 100)
+                    .fit()
                     .asRoundedRect(2.5f)
                     .into(image)
     }
@@ -45,7 +44,6 @@ class ReleaseViewHolderUI(): AnkoComponent<ViewGroup> {
             aspectRatioFrameLayout {
                 fixedSide = AspectRatioFrameLayout.Side.WIDTH
                 aspectRatio = 0.56f
-                backgroundResource = R.color.colorPrimaryDark
 
                 onClick {
                     if (release != null && onReleaseClicked != null)

@@ -10,7 +10,7 @@ import com.anko.stinodes.ankoplication.domain.detailedanime.Episode
 import com.anko.stinodes.ankoplication.ext.asRoundedRect
 import com.anko.stinodes.ankoplication.ext.aspectRatioFrameLayout
 import com.anko.stinodes.ankoplication.web.IMAGE_URL
-import com.anko.stinodes.ankoplication.widget.AspectRatioFrameLayout
+import com.anko.stinodes.ankoplication.widget.AspectRatioFrameLayout.Side.WIDTH
 import com.squareup.picasso.Picasso
 import org.jetbrains.anko.*
 
@@ -41,7 +41,7 @@ class EpisodeViewHolderUI(): AnkoComponent<ViewGroup> {
                 bottomMargin = dip(4)
             }
             aspectRatioFrameLayout {
-                fixedSide = AspectRatioFrameLayout.Side.WIDTH
+                fixedSide = WIDTH
                 aspectRatio = 0.56f
 
                 image = imageView {

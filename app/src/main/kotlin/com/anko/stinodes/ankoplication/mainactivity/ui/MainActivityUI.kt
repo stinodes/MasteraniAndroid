@@ -1,7 +1,5 @@
 package com.anko.stinodes.ankoplication.mainactivity.ui
 
-import android.content.Context
-import android.os.Build
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.AppBarLayout.LayoutParams.*
 import android.support.design.widget.CollapsingToolbarLayout
@@ -10,16 +8,16 @@ import android.support.design.widget.TabLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 import android.view.View
-import android.view.animation.AlphaAnimation
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.anko.stinodes.ankoplication.R
 import com.anko.stinodes.ankoplication.ext.CollapsingToolbar.lparams
+import com.anko.stinodes.ankoplication.ext.aspectRatioFrameLayout
 import com.anko.stinodes.ankoplication.ext.collapseMode
 import com.anko.stinodes.ankoplication.ext.dimenAttr
 import com.anko.stinodes.ankoplication.mainactivity.MainActivity
 import com.anko.stinodes.ankoplication.util.HeightAnimation
-import com.squareup.picasso.Callback
+import com.anko.stinodes.ankoplication.widget.AspectRatioFrameLayout.Side.WIDTH
 import com.squareup.picasso.Picasso
 import org.jetbrains.anko.*
 import org.jetbrains.anko.appcompat.v7.toolbar
@@ -79,27 +77,27 @@ class MainActivityUI: AnkoComponent<MainActivity> {
         )
     }
 
-     fun showAppBarImage(context: Context, url: String = randomImageUrl) {
-         appBarImageVisible = true
-         val anim = AlphaAnimation(0f, 1f)
-         anim.duration = 300
-         anim.fillAfter = true
-         Picasso.with(context)
-                 .load(url)
-                 .into(appBarImage, object: Callback{
-                     override fun onSuccess() {
-                         appBarImage.startAnimation(anim)
-                     }
-                     override fun onError() {}
-                 })
-     }
-    fun hideAppBarImage() {
-        appBarImageVisible = false
-        val anim = AlphaAnimation(1f, 0f)
-        anim.duration = 300
-        anim.fillAfter = true
-        appBarImage.startAnimation(anim)
-    }
+//     fun showAppBarImage(context: Context, url: String = randomImageUrl) {
+//         appBarImageVisible = true
+//         val anim = AlphaAnimation(0f, 1f)
+//         anim.duration = 300
+//         anim.fillAfter = true
+//         Picasso.with(context)
+//                 .load(url)
+//                 .into(appBarImage, object: Callback{
+//                     override fun onSuccess() {
+//                         appBarImage.startAnimation(anim)
+//                     }
+//                     override fun onError() {}
+//                 })
+//     }
+//    fun hideAppBarImage() {
+//        appBarImageVisible = false
+//        val anim = AlphaAnimation(1f, 0f)
+//        anim.duration = 300
+//        anim.fillAfter = true
+//        appBarImage.startAnimation(anim)
+//    }
 
     override fun createView(ui: AnkoContext<MainActivity>): View  = with(ui) {
         coordinatorLayout {
@@ -124,26 +122,30 @@ class MainActivityUI: AnkoComponent<MainActivity> {
                             init = collapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN)
                     )
 
-                    appBarBackground = imageView {
-                        scaleType = ImageView.ScaleType.CENTER_CROP
-                        Picasso.with(context)
-                                .load(randomImageUrl)
-                                .into(this)
+                    aspectRatioFrameLayout {
+                        aspectRatio = 0.56f
+                        fixedSide = WIDTH
 
+                        appBarBackground = imageView {
+                            Picasso.with(context)
+                                    .load(randomImageUrl)
+                                    .fit()
+                                    .into(this)
+
+                        }
                     }.lparams(
                             width = matchParent,
-                            height = dimen(R.dimen.tool_bar_image),
                             init = collapseMode(COLLAPSE_MODE_PARALLAX)
                     )
 
-                    appBarImage = imageView {
-                        scaleType = ImageView.ScaleType.CENTER_CROP
-
-                    }.lparams(
-                            width = matchParent,
-                            height = matchParent,
-                            init = collapseMode(COLLAPSE_MODE_PARALLAX)
-                    )
+//                    appBarImage = imageView {
+//                        scaleType = ImageView.ScaleType.CENTER_CROP
+//
+//                    }.lparams(
+//                            width = matchParent,
+//                            height = matchParent,
+//                            init = collapseMode(COLLAPSE_MODE_PARALLAX)
+//                    )
 
                     toolbarFragmentContainer = frameLayout {
                         id = R.id.toolbarViewContainer
@@ -169,7 +171,6 @@ class MainActivityUI: AnkoComponent<MainActivity> {
                     backgroundResource = R.color.red
                 }.lparams(width = matchParent, height = 0) {
                     scrollFlags = SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
-                    elevation = 0f
                 }
             }.lparams(width = matchParent) {}
 

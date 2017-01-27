@@ -30,6 +30,8 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
                 verticalLayout {
                     backgroundResource = R.color.red
                     padding = dimen(R.dimen.margin)
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        elevation = 8f
 
                     titleView = textView {
                         lines = 1
@@ -41,17 +43,18 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
 
                     infoContainer = verticalLayout {
                         padding = dimen(R.dimen.margin)
-                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                            elevation = 2f
                     }.lparams(width = matchParent) {
                         margin = dimen(R.dimen.margin_small)
                     }
 
-                }.lparams(width = matchParent) {}
+                }.lparams(width = matchParent) {
+                    weight = 0f
+                }
 
                 episodeRecycler = recyclerView {
                     padding = dimen(R.dimen.margin)
-                }.lparams(width = matchParent, height = wrapContent) {
+                    clipToPadding = false
+                }.lparams(width = matchParent) {
                     weight = 1f
                 }
             }.lparams(width = matchParent, height = matchParent)

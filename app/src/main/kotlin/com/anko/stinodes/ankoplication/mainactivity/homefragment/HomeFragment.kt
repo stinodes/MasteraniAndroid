@@ -30,6 +30,11 @@ class HomeFragment(val args: Bundle): Fragment() {
         }
     }
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = ui.createView(
                 AnkoContext.create(activity, this)
@@ -44,8 +49,13 @@ class HomeFragment(val args: Bundle): Fragment() {
     }
 
     override fun onResume() {
-        (activity as MainActivity).ui.tabs.setupWithViewPager(ui.pager)
-        (activity as MainActivity).ui.expandTabs()
+        with (activity as MainActivity) {
+            setToolbarFragment(
+                    getToolbarFragment(MainActivity.FragmentView.Home)
+            )
+            ui.tabs.setupWithViewPager(this@HomeFragment.ui.pager)
+            ui.expandTabs()
+        }
         super.onResume()
     }
     override fun onPause() {

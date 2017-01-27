@@ -34,6 +34,10 @@ class ReleasesFragment(val args: Bundle): Fragment() {
         realm = Realm.getDefaultInstance()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater?,
             container: ViewGroup?,
@@ -42,6 +46,7 @@ class ReleasesFragment(val args: Bundle): Fragment() {
         val view = ui.createView(
                 AnkoContext.create(activity, this)
         )
+
         ui.recyclerView.adapter = ReleasesAdapter(
                 activity,
                 realm.where(Release::class.java).findAllSortedAsync("createdAt", Sort.DESCENDING),

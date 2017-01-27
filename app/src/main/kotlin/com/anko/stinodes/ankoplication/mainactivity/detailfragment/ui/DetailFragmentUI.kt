@@ -23,24 +23,37 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
         val EXPANDED_HEIGHT = 350
     }
 
+    lateinit var parentView: ViewGroup
     lateinit var titleView: TextView
     lateinit var infoContainer: ViewGroup
     lateinit var description: TextView
     lateinit var extendedContainer: ViewGroup
+    lateinit var contentContainer: ViewGroup
     lateinit var extendedGradientView: View
     lateinit var scrollingContainer: ToggleableNestScrollView
     lateinit var episodeRecycler: RecyclerView
 
     fun expandInfo() {
         extendedContainer.startAnimation(
-                HeightAnimation(extendedContainer, extendedContainer.dip(EXPANDED_HEIGHT), 300)
+                HeightAnimation(
+                        extendedContainer,
+                        Math.min(
+                                extendedContainer.dip(EXPANDED_HEIGHT),
+                                contentContainer.measuredHeight
+                        ),
+                        300
+                )
         )
         scrollingContainer.scrollable = true
         extendedGradientView.onClick { collapseInfo() }
     }
     fun collapseInfo() {
         extendedContainer.startAnimation(
-                HeightAnimation(extendedContainer, extendedContainer.dip(COLLAPSED_HEIGHT), 300)
+                HeightAnimation(
+                        extendedContainer,
+                        extendedContainer.dip(COLLAPSED_HEIGHT),
+                        300
+                )
         )
         scrollingContainer.smoothScrollTo(0, 0)
         scrollingContainer.scrollable = false
@@ -50,7 +63,7 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
     override fun createView(ui: AnkoContext<DetailFragment>): View = with(ui) {
         frameLayout {
             lparams(width = matchParent, height = matchParent)
-            verticalLayout {
+            parentView = verticalLayout {
 
                 extendedContainer = relativeLayout {
                     backgroundResource = R.color.red
@@ -60,7 +73,7 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
                     scrollingContainer = toggleableNestScrollView {
                         scrollable = false
 
-                        verticalLayout {
+                        contentContainer = verticalLayout {
                             padding = dimen(R.dimen.margin)
                             bottomPadding = dip(80)
 

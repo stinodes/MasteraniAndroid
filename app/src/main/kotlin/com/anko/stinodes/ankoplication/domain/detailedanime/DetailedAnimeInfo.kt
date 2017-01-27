@@ -7,7 +7,7 @@ class DetailedAnimeInfo {
     var id: Int? = null
     var title: String? = null
     var slug: String? = null
-    var synopsys: String? = null
+    var synopsis: String? = null
     var score: Float? = null
     @SerializedName("episode_count") var episodeCount: Int? = null
     @SerializedName("episode_length") var episodeLength: Int? = null

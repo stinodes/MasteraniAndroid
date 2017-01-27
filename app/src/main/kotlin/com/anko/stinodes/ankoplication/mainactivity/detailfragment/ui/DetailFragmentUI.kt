@@ -9,47 +9,113 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.anko.stinodes.ankoplication.R
+import com.anko.stinodes.ankoplication.ext.toggleableNestScrollView
 import com.anko.stinodes.ankoplication.mainactivity.detailfragment.DetailFragment
+import com.anko.stinodes.ankoplication.util.HeightAnimation
+import com.anko.stinodes.ankoplication.widget.ToggleableNestScrollView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 
 class DetailFragmentUI: AnkoComponent<DetailFragment> {
 
     companion object {
-        val VIEW_PAGER = R.id.detail_viewpager
+        val COLLAPSED_HEIGHT = 180
+        val EXPANDED_HEIGHT = 350
     }
 
     lateinit var titleView: TextView
     lateinit var infoContainer: ViewGroup
+    lateinit var description: TextView
+    lateinit var extendedContainer: ViewGroup
+    lateinit var extendedGradientView: View
+    lateinit var scrollingContainer: ToggleableNestScrollView
     lateinit var episodeRecycler: RecyclerView
+
+    fun expandInfo() {
+        extendedContainer.startAnimation(
+                HeightAnimation(extendedContainer, extendedContainer.dip(EXPANDED_HEIGHT), 300)
+        )
+        scrollingContainer.scrollable = true
+        extendedGradientView.onClick { collapseInfo() }
+    }
+    fun collapseInfo() {
+        extendedContainer.startAnimation(
+                HeightAnimation(extendedContainer, extendedContainer.dip(COLLAPSED_HEIGHT), 300)
+        )
+        scrollingContainer.smoothScrollTo(0, 0)
+        scrollingContainer.scrollable = false
+        extendedGradientView.onClick { expandInfo() }
+    }
 
     override fun createView(ui: AnkoContext<DetailFragment>): View = with(ui) {
         frameLayout {
             lparams(width = matchParent, height = matchParent)
             verticalLayout {
-                verticalLayout {
+
+                extendedContainer = relativeLayout {
                     backgroundResource = R.color.red
-                    padding = dimen(R.dimen.margin)
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                         elevation = 8f
 
-                    titleView = textView {
-                        lines = 1
-                        textSize = 22f
-                        setTypeface(typeface, Typeface.BOLD)
-                        textColor = ContextCompat.getColor(context, R.color.white)
-                        gravity = Gravity.CENTER
-                    }.lparams(width = matchParent)
+                    scrollingContainer = toggleableNestScrollView {
+                        scrollable = false
 
-                    infoContainer = verticalLayout {
-                        padding = dimen(R.dimen.margin)
-                    }.lparams(width = matchParent) {
-                        margin = dimen(R.dimen.margin_small)
+                        verticalLayout {
+                            padding = dimen(R.dimen.margin)
+                            bottomPadding = dip(80)
+
+                            titleView = textView {
+                                lines = 1
+                                textSize = 22f
+                                setTypeface(typeface, Typeface.BOLD)
+                                textColor = ContextCompat.getColor(context, R.color.white)
+                                gravity = Gravity.CENTER
+                            }.lparams(width = matchParent)
+
+                            infoContainer = verticalLayout {
+                                leftPadding = dimen(R.dimen.margin)
+                                rightPadding = dimen(R.dimen.margin)
+                            }.lparams(width = matchParent) {
+                                leftMargin = dimen(R.dimen.margin_small)
+                                rightMargin = dimen(R.dimen.margin_small)
+                            }
+
+                            verticalLayout {
+                                rightPadding = dimen(R.dimen.margin)
+                                leftPadding = dimen(R.dimen.margin)
+
+                                description = textView {
+                                    topPadding = dimen(R.dimen.margin_small)
+                                    textSize = 13f
+                                    textColor = ContextCompat.getColor(context, R.color.white2)
+                                    gravity = Gravity.FILL_HORIZONTAL
+                                }.lparams(width = matchParent)
+
+                            }.lparams(width = matchParent) {
+                                rightMargin = dimen(R.dimen.margin_small)
+                                leftMargin = dimen(R.dimen.margin_small)
+                            }
+                        }
+                    }.lparams(width = matchParent, height = matchParent) {
+                        alignWithParent = true
                     }
 
-                }.lparams(width = matchParent) {
-                    weight = 0f
-                }
+                    extendedGradientView = frameLayout {
+                        backgroundResource = R.drawable.primary_transparent_gradient
+
+                        onClick { expandInfo() }
+
+                        imageButton {
+                            backgroundResource = R.drawable.design_fab_background
+                        }.lparams(height = dip(32), width = dip(32)) {
+                            gravity = Gravity.CENTER
+                        }
+
+                    }.lparams(width = matchParent, height = dip(64)) {
+                        alignParentBottom()
+                    }
+
+                }.lparams(width = matchParent, height = dip(180))
 
                 episodeRecycler = recyclerView {
                     padding = dimen(R.dimen.margin)

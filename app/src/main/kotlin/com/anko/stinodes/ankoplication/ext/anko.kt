@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewManager
 import android.widget.FrameLayout
 import com.anko.stinodes.ankoplication.widget.AspectRatioFrameLayout
+import com.anko.stinodes.ankoplication.widget.ToggleableNestScrollView
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.ctx
 import org.jetbrains.anko.custom.ankoView
@@ -51,6 +52,9 @@ fun Fragment.attr(@AttrRes attribute: Int): TypedValue = activity.attr(attribute
 fun ViewManager.aspectRatioFrameLayout() = aspectRatioFrameLayout{}
 fun ViewManager.aspectRatioFrameLayout(init: AspectRatioFrameLayout.() -> Unit) =
         ankoView(::AspectRatioFrameLayout, init)
+fun ViewManager.toggleableNestScrollView() = toggleableNestScrollView{}
+fun ViewManager.toggleableNestScrollView(init: ToggleableNestScrollView.() -> Unit) =
+        ankoView(::ToggleableNestScrollView, init)
 
 
 object FrameLayout {

@@ -31,15 +31,12 @@ class DetailFragment(val args: Bundle): Fragment() {
     var selectedEpisode: Int? = null
     var episode: Episode? = null
 
-
     companion object {
         fun create(bundle: Bundle = Bundle()): DetailFragment {
             val fragment = DetailFragment(bundle)
             return fragment
         }
     }
-
-    init {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,6 +111,8 @@ class DetailFragment(val args: Bundle): Fragment() {
                 "Episodes",
                 anime.episodesToString()
         )
+        Log.d("SYN", anime.synopsis)
+        ui.description.text = anime.synopsis
     }
     fun bindEpisodeData(episodes: List<Episode>) {
         ui.episodeRecycler.adapter =

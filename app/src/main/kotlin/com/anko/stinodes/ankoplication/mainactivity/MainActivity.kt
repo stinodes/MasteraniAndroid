@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         handleAppbarScrolling(ui.appBar)
 
-        navigate(Home)
+        stepTo(Home)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -88,12 +88,18 @@ class MainActivity : AppCompatActivity() {
 
     fun navigate(fragment: FragmentView, bundle: Bundle = Bundle()) {
         val f = getFragment(fragment, bundle)
-        val tbf = getToolbarFragment(fragment, bundle)
         supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, f)
                 .addToBackStack(null)
                 .commit()
     }
+    fun stepTo(fragment: FragmentView, bundle: Bundle = Bundle()) {
+        val f = getFragment(fragment, bundle)
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, f)
+                .commit()
+    }
+
     fun setToolbarFragment(fragment: Fragment?) {
         if (fragment != null)
             supportFragmentManager.beginTransaction()

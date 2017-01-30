@@ -111,7 +111,6 @@ class DetailFragment(val args: Bundle): Fragment() {
                 "Episodes",
                 anime.episodesToString()
         )
-        Log.d("SYN", anime.synopsis)
         ui.description.text = anime.synopsis
     }
     fun bindEpisodeData(episodes: List<Episode>) {

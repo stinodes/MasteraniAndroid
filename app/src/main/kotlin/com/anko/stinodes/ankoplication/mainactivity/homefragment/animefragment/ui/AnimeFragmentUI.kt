@@ -6,20 +6,18 @@ import com.anko.stinodes.ankoplication.mainactivity.homefragment.animefragment.A
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.recyclerview.v7.recyclerView
 import org.jetbrains.anko.verticalLayout
 
 class AnimeFragmentUI: AnkoComponent<AnimeFragment> {
 
-    lateinit var recyclerView: RecyclerView
+    lateinit var recycler: RecyclerView
 
     override fun createView(ui: AnkoContext<AnimeFragment>): View  = with(ui) {
         verticalLayout {
             lparams(width = matchParent, height = matchParent) {}
 
-//            recyclerView = recyclerView {}
-//                    .lparams(width = matchParent) {
-//                        weight = 1f
-//                    }
+            recycler = recyclerView {}.lparams(width = matchParent, height = matchParent)
         }
     }
 }

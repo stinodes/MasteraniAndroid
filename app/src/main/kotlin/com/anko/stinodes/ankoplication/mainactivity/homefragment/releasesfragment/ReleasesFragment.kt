@@ -12,6 +12,7 @@ import com.anko.stinodes.ankoplication.domain.Release
 import com.anko.stinodes.ankoplication.mainactivity.MainActivity
 import com.anko.stinodes.ankoplication.mainactivity.MainActivity.FragmentView.Detail
 import com.anko.stinodes.ankoplication.mainactivity.homefragment.releasesfragment.ui.ReleasesFragmentUI
+import com.anko.stinodes.ankoplication.web.MAWrapper
 import io.realm.Realm
 import io.realm.Sort
 import org.jetbrains.anko.AnkoContext
@@ -36,6 +37,7 @@ class ReleasesFragment(val args: Bundle): Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MAWrapper.get().fetchReleases()
     }
 
     override fun onCreateView(

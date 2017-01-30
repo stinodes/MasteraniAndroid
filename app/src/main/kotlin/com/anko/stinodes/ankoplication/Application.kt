@@ -38,7 +38,6 @@ class Application : Application() {
         else
             Log.d("APP", "Genres already set")
         maWrapper.setPref("isNotFirstOpen", "true")
-        maWrapper.fetchReleases()
         super.onCreate()
     }
 }

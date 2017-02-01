@@ -37,6 +37,7 @@ class AnimeViewHolderUI(): AnkoComponent<ViewGroup> {
 
     override fun createView(ui: AnkoContext<ViewGroup>): View = with (ui) {
         verticalLayout {
+            onClick { if (onAnimeClicked != null && anime != null) onAnimeClicked?.invoke(anime!!) }
             lparams(width = matchParent) {
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     marginStart = dip(4)

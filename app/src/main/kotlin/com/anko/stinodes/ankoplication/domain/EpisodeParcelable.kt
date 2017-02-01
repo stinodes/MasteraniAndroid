@@ -29,6 +29,7 @@ class EpisodeParcelable: Parcelable {
         }
 
         fun fromRelease(release: Release) = EpisodeParcelable(release.anime?.id, release.episode)
+        fun fromId(id: Int) = EpisodeParcelable(id, null)
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {

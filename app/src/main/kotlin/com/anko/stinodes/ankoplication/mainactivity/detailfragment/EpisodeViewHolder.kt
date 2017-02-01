@@ -15,6 +15,8 @@ class EpisodeViewHolder(
 
     fun onBind(episode: Episode?) {
         ui.episode = episode
+        ui.title?.text = episode?.info?.title
+        ui.epNum?.text = episode?.info?.episode.toString()
         ui.bindEpisodeImage(ctx!!)
     }
 }

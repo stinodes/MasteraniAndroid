@@ -2,7 +2,6 @@ package com.anko.stinodes.ankoplication.mainactivity.homefragment.animefragment
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.ViewGroup
 import com.anko.stinodes.ankoplication.domain.Anime
 import com.anko.stinodes.ankoplication.mainactivity.homefragment.animefragment.ui.AnimeViewHolderUI
@@ -31,7 +30,6 @@ class AnimeAdapter(
         if (item != null) {
             holder?.ctx = context
             holder?.onBind(item)
-            Log.d("BINDING","BINDING VH")
             if (isLast(position))
                 addPage(page + 1)
         }

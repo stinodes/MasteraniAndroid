@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Typeface
 import android.os.Build
 import android.support.v4.content.ContextCompat
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -65,20 +66,27 @@ class ReleaseViewHolderUI(): AnkoComponent<ViewGroup> {
                 title = textView {
                     lines = 1
                     textColor = ContextCompat.getColor(context, R.color.white)
-                    textSize = 14f
+                    textSize = 12f
                     alpha = 0.8f
-                    text = "TEST"
+                    setTypeface(typeface, Typeface.BOLD)
                 }.lparams() {
                     weight = 1f
                 }
 
                 episode = textView {
                     lines = 1
-                    textColor = ContextCompat.getColor(context, R.color.colorPrimary)
-                    textSize = 13f
+                    textColor = ContextCompat.getColor(context, R.color.white2)
+                    textSize = 12f
+                    alpha = 0.6f
                     setTypeface(typeface, Typeface.BOLD)
                     leftPadding = dip(4)
                 }.lparams()
+            }
+            view {
+                backgroundResource = R.color.colorPrimary
+                alpha = 0.5f
+            }.lparams(width = dip(64), height = dip(1)) {
+                gravity = Gravity.CENTER_HORIZONTAL
             }
         }
     }

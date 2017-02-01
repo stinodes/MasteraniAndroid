@@ -14,10 +14,26 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            if (System.getenv()["CI"]) { // CI=true is exported by Greenhouse
+                storeFile file(System.getenv()["GH_KEYSTORE_PATH"])
+                storePassword System.getenv()["GH_KEYSTORE_PASSWORD"]
+                keyAlias System.getenv()["GH_KEY_ALIAS"]
+                keyPassword System.getenv()["GH_KEY_PASSWORD"]
+            } else {
+                storeFile file("key/masterani.jks")
+                storePassword "nexisgay"
+                keyAlias "masterani"
+                keyPassword "nexisgay"
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     sourceSets {

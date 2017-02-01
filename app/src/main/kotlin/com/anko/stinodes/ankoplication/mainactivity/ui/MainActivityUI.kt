@@ -77,28 +77,6 @@ class MainActivityUI: AnkoComponent<MainActivity> {
         )
     }
 
-//     fun showAppBarImage(context: Context, url: String = randomImageUrl) {
-//         appBarImageVisible = true
-//         val anim = AlphaAnimation(0f, 1f)
-//         anim.duration = 300
-//         anim.fillAfter = true
-//         Picasso.with(context)
-//                 .load(url)
-//                 .into(appBarImage, object: Callback{
-//                     override fun onSuccess() {
-//                         appBarImage.startAnimation(anim)
-//                     }
-//                     override fun onError() {}
-//                 })
-//     }
-//    fun hideAppBarImage() {
-//        appBarImageVisible = false
-//        val anim = AlphaAnimation(1f, 0f)
-//        anim.duration = 300
-//        anim.fillAfter = true
-//        appBarImage.startAnimation(anim)
-//    }
-
     override fun createView(ui: AnkoContext<MainActivity>): View  = with(ui) {
         coordinatorLayout {
             lparams(width = matchParent, height = matchParent)
@@ -107,6 +85,7 @@ class MainActivityUI: AnkoComponent<MainActivity> {
             appBar = appBarLayout {
                 id = APP_BAR_ID
                 backgroundResource = R.color.red
+                elevation = 8f
 
                 collapsingToolbarLayout {
                     setCollapsedTitleTextAppearance(R.style.Toolbar_title)
@@ -137,15 +116,6 @@ class MainActivityUI: AnkoComponent<MainActivity> {
                             width = matchParent,
                             init = collapseMode(COLLAPSE_MODE_PARALLAX)
                     )
-
-//                    appBarImage = imageView {
-//                        scaleType = ImageView.ScaleType.CENTER_CROP
-//
-//                    }.lparams(
-//                            width = matchParent,
-//                            height = matchParent,
-//                            init = collapseMode(COLLAPSE_MODE_PARALLAX)
-//                    )
 
                     toolbarFragmentContainer = frameLayout {
                         id = R.id.toolbarViewContainer

@@ -17,6 +17,8 @@ class ReleaseViewHolder(
     fun onBind(release: Release?) {
         ui.release = release
         ui.onReleaseClicked = onReleaseClicked
+        ui.title?.text = release?.anime?.title
+        ui.episode?.text = release?.episode.toString()
         ui.bindWallpaperImage(ctx!!)
     }
 }

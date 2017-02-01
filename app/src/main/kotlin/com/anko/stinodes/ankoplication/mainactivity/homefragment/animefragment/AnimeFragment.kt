@@ -7,11 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
-import com.anko.stinodes.ankoplication.domain.Anime
 import com.anko.stinodes.ankoplication.mainactivity.homefragment.animefragment.ui.AnimeFragmentUI
 import com.anko.stinodes.ankoplication.web.MAWrapper
 import io.realm.Realm
-import io.realm.Sort
 import org.jetbrains.anko.AnkoContext
 import kotlin.properties.Delegates
 
@@ -48,7 +46,6 @@ class AnimeFragment(val args: Bundle): Fragment() {
 
         ui.recycler.adapter = AnimeAdapter(
                 activity,
-                realm.where(Anime::class.java).findAllSortedAsync("score", Sort.DESCENDING),
                 { release ->
 //                    (activity as MainActivity).navigate(MainActivity.FragmentView.Detail, {
 //                        val b = Bundle()

@@ -15,10 +15,11 @@ class ReleasesFragmentUI() : AnkoComponent<ReleasesFragment> {
         frameLayout {
             lparams(width = matchParent, height = matchParent) {
                 backgroundResource = R.color.black
-                topPadding = dip(4)
             }
-            recyclerView = recyclerView {}
-                    .lparams(width = matchParent, height = matchParent) {}
+            recyclerView = recyclerView {
+                topPadding = dip(4)
+                clipToPadding = false
+            }.lparams(width = matchParent, height = matchParent) {}
         }
     }
 }

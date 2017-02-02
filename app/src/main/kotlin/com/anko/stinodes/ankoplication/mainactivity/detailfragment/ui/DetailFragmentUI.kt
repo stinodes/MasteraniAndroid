@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import com.anko.stinodes.ankoplication.R
 import com.anko.stinodes.ankoplication.ext.toggleableNestScrollView
@@ -30,6 +31,7 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
     lateinit var extendedContainer: ViewGroup
     lateinit var contentContainer: ViewGroup
     lateinit var extendedGradientView: View
+    lateinit var expandButton: ImageButton
     lateinit var scrollingContainer: ToggleableNestScrollView
     lateinit var episodeRecycler: RecyclerView
 
@@ -45,7 +47,7 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
                 )
         )
         scrollingContainer.scrollable = true
-        extendedGradientView.onClick { collapseInfo() }
+        expandButton.onClick { collapseInfo() }
     }
     fun collapseInfo() {
         extendedContainer.startAnimation(
@@ -57,7 +59,7 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
         )
         scrollingContainer.smoothScrollTo(0, 0)
         scrollingContainer.scrollable = false
-        extendedGradientView.onClick { expandInfo() }
+        expandButton.onClick { expandInfo() }
     }
 
     override fun createView(ui: AnkoContext<DetailFragment>): View = with(ui) {
@@ -116,10 +118,12 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
                     extendedGradientView = frameLayout {
                         backgroundResource = R.drawable.primary_transparent_gradient
 
-                        onClick { expandInfo() }
+                        onClick { expandButton.performClick() }
 
-                        imageButton {
+                        expandButton = imageButton {
                             backgroundResource = R.drawable.design_fab_background
+
+                            onClick { expandInfo() }
                         }.lparams(height = dip(32), width = dip(32)) {
                             gravity = Gravity.CENTER
                         }

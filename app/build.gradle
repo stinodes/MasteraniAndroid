@@ -15,25 +15,18 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
-        release {
-            if (System.getenv()["CI"]) { // CI=true is exported by Greenhouse
-                storeFile file(System.getenv()["BITRISEIO_ANDROID_KEYSTORE_URL"])
-                storePassword System.getenv()["BITRISEIO_ANDROID_KEYSTORE_PASSWORD"]
-                keyAlias System.getenv()["BITRISEIO_ANDROID_KEYSTORE_ALIAS"]
-                keyPassword System.getenv()["BITRISEIO_ANDROID_KEYSTORE_PASSWORD"]
-            } else {
-                storeFile file("key/masterani.jks")
-                storePassword "nexisgay"
-                keyAlias "masterani"
-                keyPassword "nexisgay"
-            }
-        }
+//        release {
+//            storeFile file("../keystores/masterani.jks")
+//            storePassword "nexisgay"
+//            keyAlias "masterani"
+//            keyPassword "nexisgay"
+//        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
         }
     }
     sourceSets {

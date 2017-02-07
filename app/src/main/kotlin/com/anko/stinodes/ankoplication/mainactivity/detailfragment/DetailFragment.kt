@@ -121,6 +121,11 @@ class DetailFragment(val args: Bundle): Fragment() {
                 )
         ui.episodeRecycler.layoutManager =
                 LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+
+        if (episodes.isEmpty())
+            ui.episodeRecycler.visibility = View.GONE
+        else
+            ui.emptyMessage.visibility = View.GONE
     }
     fun bindToolbarImage(url: String) {
         if (toolbarImageFragment != null )

@@ -39,7 +39,7 @@ class EpisodesAdapter(
         )
     }
 
-    override fun getItemCount(): Int = Math.min(items.size, 36)
+    override fun getItemCount(): Int = items.size
 
     fun replaceItems(newItems: List<Episode>) {
         _items = mutableListOf(*newItems.toTypedArray())

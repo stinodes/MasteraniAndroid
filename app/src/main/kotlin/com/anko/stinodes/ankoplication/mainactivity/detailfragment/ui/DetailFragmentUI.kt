@@ -34,6 +34,7 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
     lateinit var expandButton: ImageButton
     lateinit var scrollingContainer: ToggleableNestScrollView
     lateinit var episodeRecycler: RecyclerView
+    lateinit var emptyMessage: ViewGroup
 
     fun expandInfo() {
         extendedContainer.startAnimation(
@@ -140,6 +141,23 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
                 }.lparams(width = matchParent) {
                     weight = 1f
                 }
+
+                emptyMessage = verticalLayout {
+                    padding = dip(32)
+
+                    textView {
+                        text = "There are no episodes to show."
+                        textColor = ContextCompat.getColor(context, R.color.white)
+                        textSize = 18f
+                        gravity = Gravity.CENTER_HORIZONTAL
+                    }.lparams {
+                        gravity = Gravity.CENTER_HORIZONTAL
+                    }
+
+                }.lparams(width = matchParent) {
+                    weight = 1f
+                }
+
             }.lparams(width = matchParent, height = matchParent)
         }
     }

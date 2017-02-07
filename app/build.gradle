@@ -17,10 +17,10 @@ android {
     signingConfigs {
         release {
             if (System.getenv()["CI"]) { // CI=true is exported by Greenhouse
-                storeFile file(System.getenv()["GH_KEYSTORE_PATH"])
-                storePassword System.getenv()["GH_KEYSTORE_PASSWORD"]
-                keyAlias System.getenv()["GH_KEY_ALIAS"]
-                keyPassword System.getenv()["GH_KEY_PASSWORD"]
+                storeFile file(System.getenv()["BITRISEIO_ANDROID_KEYSTORE_URL"])
+                storePassword System.getenv()["BITRISEIO_ANDROID_KEYSTORE_PASSWORD"]
+                keyAlias System.getenv()["BITRISEIO_ANDROID_KEYSTORE_ALIAS"]
+                keyPassword System.getenv()["BITRISEIO_ANDROID_KEYSTORE_PASSWORD"]
             } else {
                 storeFile file("key/masterani.jks")
                 storePassword "nexisgay"

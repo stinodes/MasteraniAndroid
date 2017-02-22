@@ -4,6 +4,8 @@ import android.graphics.Typeface
 import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.OnScrollListener
+import android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +38,14 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
     lateinit var episodeRecycler: RecyclerView
     lateinit var emptyMessage: ViewGroup
 
+    val episodeScrollListener: OnScrollListener = object: OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            if (newState == SCROLL_STATE_DRAGGING)
+                collapseInfo()
+        }
+    }
+
     fun expandInfo() {
         extendedContainer.startAnimation(
                 HeightAnimation(
@@ -49,6 +59,7 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
         )
         scrollingContainer.scrollable = true
         expandButton.onClick { collapseInfo() }
+        episodeRecycler.addOnScrollListener(episodeScrollListener)
     }
     fun collapseInfo() {
         extendedContainer.startAnimation(
@@ -61,6 +72,7 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
         scrollingContainer.smoothScrollTo(0, 0)
         scrollingContainer.scrollable = false
         expandButton.onClick { expandInfo() }
+        episodeRecycler.removeOnScrollListener(episodeScrollListener)
     }
 
     override fun createView(ui: AnkoContext<DetailFragment>): View = with(ui) {
@@ -187,6 +199,31 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
                 setTypeface(typeface, Typeface.NORMAL)
                 gravity = Gravity.END or Gravity.RIGHT
                 text = value
+            }.lparams() {
+                weight = 1f
+            }
+        }
+    }
+    fun infoField(viewgroup: ViewGroup, key: String, value: (ViewGroup) -> ViewGroup) = with(viewgroup) {
+        linearLayout {
+            lparams(width = matchParent) {
+                topMargin = dimen(R.dimen.margin_small)
+                bottomMargin = dimen(R.dimen.margin_small)
+            }
+            textView {
+                lines = 1
+                textColor = ContextCompat.getColor(context, R.color.white2)
+                alpha = 0.7f
+                textSize = 14f
+                setTypeface(typeface, Typeface.NORMAL)
+                gravity = Gravity.START or Gravity.LEFT
+                text = key
+            }.lparams {
+                weight = 1f
+            }
+            relativeLayout {
+                gravity = Gravity.END or Gravity.RIGHT
+                value(this@relativeLayout)
             }.lparams() {
                 weight = 1f
             }

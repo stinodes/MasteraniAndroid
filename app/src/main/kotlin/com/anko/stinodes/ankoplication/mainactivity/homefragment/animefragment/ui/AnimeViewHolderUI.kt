@@ -24,6 +24,7 @@ class AnimeViewHolderUI(): AnkoComponent<ViewGroup> {
     var onAnimeClicked: ((Anime) -> Unit)? = null
     var anime: Anime? = null
     var image: ImageView? = null
+    var rating: TextView? = null
     var title: TextView? = null
 
     fun bindWallpaperImage(context: Context) {
@@ -48,14 +49,40 @@ class AnimeViewHolderUI(): AnkoComponent<ViewGroup> {
                 topMargin = dip(4)
                 bottomMargin = dip(4)
             }
-            aspectRatioFrameLayout {
-                fixedSide = AspectRatioFrameLayout.Side.WIDTH
-                aspectRatio = 1.42f
+            relativeLayout {
+                aspectRatioFrameLayout {
+                    fixedSide = AspectRatioFrameLayout.Side.WIDTH
+                    aspectRatio = 1.42f
 
-                image = imageView {
-                    id = R.id.releaseWallpaper
+                    image = imageView {
+                        id = R.id.releaseWallpaper
+                    }
+                }.lparams(width = matchParent)
+
+                linearLayout {
+                    padding = dip(4)
+
+                    rating = textView {
+                        text = "?"
+                        textSize = 10f
+                        textColor = ContextCompat.getColor(context, R.color.white)
+                        setShadowLayer(3f, 0f, 3f, ContextCompat.getColor(context, R.color.black))
+                        setTypeface(typeface, Typeface.BOLD)
+                    }.lparams() {
+                        rightMargin = dip(4)
+                    }
+
+                    imageView {
+                        imageResource = R.drawable.star
+                    }.lparams(height = dip(10), width = dip(10)) {
+                        gravity = Gravity.CENTER_VERTICAL
+                    }
+
+                }.lparams(width = wrapContent) {
+                    alignParentTop()
+                    alignParentRight()
                 }
-            }.lparams(width = matchParent)
+            }
 
             linearLayout {
                 padding = dip(4)

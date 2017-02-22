@@ -19,5 +19,6 @@ class AnimeViewHolder(
         ui.onAnimeClicked = onAnimeClicked
         ui.bindWallpaperImage(ctx!!)
         ui.title?.text = anime?.title
+        ui.rating?.text = anime?.score.toString()
     }
 }

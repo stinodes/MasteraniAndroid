@@ -81,7 +81,7 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
             parentView = verticalLayout {
 
                 extendedContainer = relativeLayout {
-                    backgroundResource = R.color.red
+                    backgroundResource = R.drawable.primary_background_gradient
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                         elevation = 8f
 

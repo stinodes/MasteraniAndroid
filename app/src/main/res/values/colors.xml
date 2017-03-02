@@ -11,4 +11,10 @@
     <color name="dark_grey">#ff424242</color>
     <color name="transparent">#00ffffff</color>
     <color name="semitransparent_white">#abFFFFFF</color>
+    <color name="primary_gradient_start">#ffe50914</color>
+    <color name="primary_gradient_end">#f1133f</color>
+    <color name="dark_gradient_start">#ff121416</color>
+    <color name="dark_gradient_end">#ff222326</color>
+    <color name="dark_card_gradient_start">#ff222427</color>
+    <color name="dark_card_gradient_end">#ff323336</color>
 </resources>

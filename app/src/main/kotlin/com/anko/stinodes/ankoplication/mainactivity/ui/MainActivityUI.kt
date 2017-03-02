@@ -84,7 +84,7 @@ class MainActivityUI: AnkoComponent<MainActivity> {
 
             appBar = appBarLayout {
                 id = APP_BAR_ID
-                backgroundResource = R.color.red
+                backgroundResource = R.drawable.primary_background_gradient
                 elevation = 8f
 
                 collapsingToolbarLayout {
@@ -138,7 +138,7 @@ class MainActivityUI: AnkoComponent<MainActivity> {
                             ContextCompat.getColor(context, R.color.white2),
                             ContextCompat.getColor(context, R.color.white)
                     )
-                    backgroundResource = R.color.red
+                    backgroundResource = R.drawable.primary_background_gradient
                 }.lparams(width = matchParent, height = 0) {
                     scrollFlags = SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
                 }
@@ -146,7 +146,7 @@ class MainActivityUI: AnkoComponent<MainActivity> {
 
             contentContainer = frameLayout {
                 id = FRAGMENT_CONT_ID
-                backgroundResource = R.color.black
+                backgroundResource = R.drawable.dark_background_gradient
             }.lparams(width = matchParent, height = matchParent) {
                 behavior = AppBarLayout.ScrollingViewBehavior()
             }

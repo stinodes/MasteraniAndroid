@@ -24,7 +24,8 @@ class AnimeViewHolderUI(): AnkoComponent<ViewGroup> {
     var onAnimeClicked: ((Anime) -> Unit)? = null
     var anime: Anime? = null
     var image: ImageView? = null
-    var rating: TextView? = null
+    var ratingContainer: ViewGroup? = null
+    var year: TextView? = null
     var title: TextView? = null
 
     fun bindWallpaperImage(context: Context) {
@@ -32,76 +33,96 @@ class AnimeViewHolderUI(): AnkoComponent<ViewGroup> {
             Picasso.with(context)
                     .load("${IMAGE_URL}poster/${anime?.poster?.file}")
                     .fit()
-                    .asRoundedRect(2.5f)
+                    .asRoundedRect(radius = context.dip(5f).toFloat(), bottomLeft = false, bottomRight = false)
                     .into(image)
+    }
+
+    fun bindRating(score: Float) {
+        with(ratingContainer!!) {
+            linearLayout {
+                var i = 1
+                val mod = score % 1
+                val starSize = 6
+
+                while (i < score) {
+
+                    imageView {
+                        imageResource = R.drawable.star
+                    }.lparams(height = dip(starSize), width = dip(starSize)) {
+                        setMargins(0, 0, 2, 0)
+                        gravity = Gravity.CENTER_VERTICAL or Gravity.END
+                    }
+
+                    i++
+                }
+                if (mod > 0) {
+                    frameLayout {
+                        imageView {
+                            imageResource = R.drawable.star
+                        }.lparams(height = dip(starSize), width = dip(starSize)) {
+                        }
+                    }.lparams(width = dip(starSize * mod)) {
+                        gravity = Gravity.CENTER_VERTICAL or Gravity.END
+                        setMargins(0, 0, 2, 0)
+                    }
+                }
+            }
+        }
     }
 
     override fun createView(ui: AnkoContext<ViewGroup>): View = with (ui) {
         verticalLayout {
-            onClick { if (onAnimeClicked != null && anime != null) onAnimeClicked?.invoke(anime!!) }
             lparams(width = matchParent) {
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    marginStart = dip(4)
-                    marginEnd = dip(4)
-                }
-                leftMargin = dip(4)
-                rightMargin = dip(4)
-                topMargin = dip(4)
-                bottomMargin = dip(4)
+                margin = dip(4)
             }
-            relativeLayout {
-                aspectRatioFrameLayout {
-                    fixedSide = AspectRatioFrameLayout.Side.WIDTH
-                    aspectRatio = 1.42f
+            backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.dark_card)
 
-                    image = imageView {
-                        id = R.id.releaseWallpaper
-                    }
-                }.lparams(width = matchParent)
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                elevation = 8f
+
+            aspectRatioFrameLayout {
+                onClick { if (onAnimeClicked != null && anime != null) onAnimeClicked?.invoke(anime!!) }
+                fixedSide = AspectRatioFrameLayout.Side.WIDTH
+                aspectRatio = 1.3f
+
+                image = imageView {
+                    id = R.id.releaseWallpaper
+                }
+            }.lparams(width = matchParent)
+
+            verticalLayout {
+                padding = dip(4)
 
                 linearLayout {
-                    padding = dip(4)
+                    topPadding = dip(2)
 
-                    rating = textView {
-                        text = "?"
-                        textSize = 10f
-                        textColor = ContextCompat.getColor(context, R.color.white)
-                        setShadowLayer(3f, 0f, 3f, ContextCompat.getColor(context, R.color.black))
-                        setTypeface(typeface, Typeface.BOLD)
+                    frameLayout {
+                        year = textView {
+                            textSize = 8f
+                            textColor = ContextCompat.getColor(context, R.color.white2)
+                            alpha = 0.6f
+                            lines = 1
+                        }.lparams()
                     }.lparams() {
-                        rightMargin = dip(4)
+                        weight = 1f
                     }
 
-                    imageView {
-                        imageResource = R.drawable.star
-                    }.lparams(height = dip(10), width = dip(10)) {
-                        gravity = Gravity.CENTER_VERTICAL
-                    }
-
-                }.lparams(width = wrapContent) {
-                    alignParentTop()
-                    alignParentRight()
+                    ratingContainer = frameLayout {
+                        topPadding = dip(4)
+                        gravity = Gravity.RIGHT or Gravity.END
+                    }.lparams()
                 }
-            }
 
-            linearLayout {
-                padding = dip(4)
-                backgroundResource = R.drawable.overlay_transparent_gradient
                 title = textView {
-                    textSize = 12f
-                    textColor = ContextCompat.getColor(context, R.color.white)
-                    alpha = 0.8f
-                    lines = 2
+                    topPadding = dip(2)
+                    bottomPadding = dip(4)
+                    textSize = 10f
+                    textColor = ContextCompat.getColor(context, R.color.white2)
+                    alpha = 0.9f
+                    lines = 1
                     ellipsize = TextUtils.TruncateAt.END
-                    setShadowLayer(3f, 0f, 2f, ContextCompat.getColor(context, R.color.black))
                     setTypeface(typeface, Typeface.BOLD)
                 }
-            }
-            view {
-                backgroundResource = R.color.colorPrimary
-                alpha = 0.5f
-            }.lparams(width = dip(64), height = dip(1)) {
-                gravity = Gravity.CENTER_HORIZONTAL
             }
         }
     }

@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Typeface
 import android.os.Build
 import android.support.v4.content.ContextCompat
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -31,25 +30,23 @@ class ReleaseViewHolderUI(): AnkoComponent<ViewGroup> {
             Picasso.with(context)
                     .load("${IMAGE_URL}wallpaper/2/${release!!.anime?.wallpaper}")
                     .fit()
-                    .asRoundedRect(2.5f)
+                    .asRoundedRect(radius = context.dip(5f).toFloat(), bottomLeft = false, bottomRight = false)
                     .into(image)
     }
 
     override fun createView(ui: AnkoContext<ViewGroup>): View = with (ui) {
         verticalLayout {
             lparams(width = matchParent) {
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    marginStart = dip(4)
-                    marginEnd = dip(4)
-                }
-                leftMargin = dip(4)
-                rightMargin = dip(4)
-                topMargin = dip(4)
-                bottomMargin = dip(4)
+                margin = dip(8)
             }
+            backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.dark_card)
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                elevation = 8f
+
             aspectRatioFrameLayout {
                 fixedSide = AspectRatioFrameLayout.Side.WIDTH
-                aspectRatio = 0.56f
+                aspectRatio = 0.5f
 
                 onClick {
                     if (release != null && onReleaseClicked != null)
@@ -61,32 +58,25 @@ class ReleaseViewHolderUI(): AnkoComponent<ViewGroup> {
                 }
             }.lparams(width = matchParent)
 
-            linearLayout {
-                padding = dip(4)
+            verticalLayout {
+                padding = dip(10)
+                bottomPadding = dip(6)
+
                 title = textView {
                     lines = 1
-                    textColor = ContextCompat.getColor(context, R.color.white)
+                    textColor = ContextCompat.getColor(context, R.color.white2)
                     textSize = 12f
-                    alpha = 0.8f
+                    alpha = 0.9f
                     setTypeface(typeface, Typeface.BOLD)
-                }.lparams() {
-                    weight = 1f
-                }
+                }.lparams()
 
                 episode = textView {
                     lines = 1
                     textColor = ContextCompat.getColor(context, R.color.white2)
-                    textSize = 12f
+                    textSize = 10f
                     alpha = 0.6f
-                    setTypeface(typeface, Typeface.BOLD)
-                    leftPadding = dip(4)
+                    topPadding = dip(4)
                 }.lparams()
-            }
-            view {
-                backgroundResource = R.color.colorPrimary
-                alpha = 0.5f
-            }.lparams(width = dip(64), height = dip(1)) {
-                gravity = Gravity.CENTER_HORIZONTAL
             }
         }
     }

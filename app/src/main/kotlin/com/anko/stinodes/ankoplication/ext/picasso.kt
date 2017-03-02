@@ -7,23 +7,46 @@ import com.squareup.picasso.Transformation
 
 
 
-fun RequestCreator.asRoundedRect(radius: Float, margin: Float = 0f): RequestCreator {
+fun RequestCreator.asRoundedRect(
+        radius: Float,
+        topLeft: Boolean = true, topRight: Boolean = true,
+        bottomLeft: Boolean = true, bottomRight: Boolean = true,
+        margin: Float = 0f
+): RequestCreator {
     transform(
             object : Transformation {
                 override fun transform(source: Bitmap): Bitmap {
-                    val paint = Paint()
-                    paint.isAntiAlias = true
-                    paint.shader = BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
-
-                    val output = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
+                    val w = source.width
+                    val h = source.height
+                    val output = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
                     val canvas = Canvas(output)
-                    canvas.drawRoundRect(
-                            RectF(
-                                    margin,
-                                    margin,
-                                    (source.width - margin).toFloat(),
-                                    (source.height - margin).toFloat()
-                            ), radius, radius, paint)
+
+                    val color = 0xff424242.toInt()
+                    val paint = Paint()
+                    val rect = Rect(0, 0, w, h)
+                    val rectF = RectF(rect)
+
+                    paint.isAntiAlias = true
+                    canvas.drawARGB(0, 0, 0, 0)
+                    paint.color = color
+                    canvas.drawRoundRect(rectF, radius, radius, paint)
+
+                    //draw rectangles over the corners we want to be square
+                    if (!topLeft) {
+                        canvas.drawRect(0f, 0f, w / 2f, h / 2f, paint)
+                    }
+                    if (!topRight) {
+                        canvas.drawRect(w / 2f, 0f, w / 1f, h / 2f, paint)
+                    }
+                    if (!bottomLeft) {
+                        canvas.drawRect(0f, h / 2f, w / 2f, h / 1f, paint)
+                    }
+                    if (!bottomRight) {
+                        canvas.drawRect(w / 2f, h / 2f, w / 1f, h / 1f, paint)
+                    }
+
+                    paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+                    canvas.drawBitmap(source, 0f, 0f, paint)
 
                     if (source !== output) {
                         source.recycle()
@@ -39,3 +62,6 @@ fun RequestCreator.asRoundedRect(radius: Float, margin: Float = 0f): RequestCrea
     )
     return this
 }
+
+fun RequestCreator.asRoundedRect(radius: Float, margin: Float = 0f): RequestCreator
+        = this.asRoundedRect(radius, true, true, true, true, margin)

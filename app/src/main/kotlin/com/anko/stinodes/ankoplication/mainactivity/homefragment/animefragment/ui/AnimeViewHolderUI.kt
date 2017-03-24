@@ -42,7 +42,7 @@ class AnimeViewHolderUI(): AnkoComponent<ViewGroup> {
             linearLayout {
                 var i = 1
                 val mod = score % 1
-                val starSize = 6
+                val starSize = 9
 
                 while (i < score) {
 
@@ -98,7 +98,7 @@ class AnimeViewHolderUI(): AnkoComponent<ViewGroup> {
 
                     frameLayout {
                         year = textView {
-                            textSize = 8f
+                            textSize = 10f
                             textColor = ContextCompat.getColor(context, R.color.white2)
                             alpha = 0.6f
                             lines = 1
@@ -116,7 +116,7 @@ class AnimeViewHolderUI(): AnkoComponent<ViewGroup> {
                 title = textView {
                     topPadding = dip(2)
                     bottomPadding = dip(4)
-                    textSize = 10f
+                    textSize = 13f
                     textColor = ContextCompat.getColor(context, R.color.white2)
                     alpha = 0.9f
                     lines = 1

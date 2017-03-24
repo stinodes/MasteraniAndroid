@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
+import com.anko.stinodes.ankoplication.R
 import com.anko.stinodes.ankoplication.domain.EpisodeParcelable
 import com.anko.stinodes.ankoplication.mainactivity.MainActivity
 import com.anko.stinodes.ankoplication.mainactivity.homefragment.animefragment.ui.AnimeFragmentUI
@@ -45,6 +46,7 @@ class AnimeFragment(val args: Bundle): Fragment() {
         val view = ui.createView(
                 AnkoContext.create(activity, this)
         )
+        val isTablet = resources.getBoolean(R.bool.isTablet)
 
         ui.recycler.adapter = AnimeAdapter(
                 activity,
@@ -56,7 +58,8 @@ class AnimeFragment(val args: Bundle): Fragment() {
                     }())
                 }
         )
-        ui.recycler.layoutManager = GridLayoutManager(activity, 3, GridLayout.VERTICAL, false)
+
+        ui.recycler.layoutManager = GridLayoutManager(activity, if (isTablet) 3 else 2, GridLayout.VERTICAL, false)
 
         return view
     }

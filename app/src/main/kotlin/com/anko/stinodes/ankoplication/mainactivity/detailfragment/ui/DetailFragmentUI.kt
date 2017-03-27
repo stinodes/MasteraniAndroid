@@ -1,39 +1,61 @@
 package com.anko.stinodes.ankoplication.mainactivity.detailfragment.ui
 
+import android.content.Context
 import android.graphics.Typeface
 import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.OnScrollListener
-import android.support.v7.widget.RecyclerView.SCROLL_STATE_DRAGGING
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.anko.stinodes.ankoplication.R
-import com.anko.stinodes.ankoplication.ext.toggleableNestScrollView
+import com.anko.stinodes.ankoplication.domain.detailedanime.DetailedAnime
+import com.anko.stinodes.ankoplication.ext.asRoundedRect
+import com.anko.stinodes.ankoplication.ext.aspectRatioFrameLayout
 import com.anko.stinodes.ankoplication.mainactivity.detailfragment.DetailFragment
 import com.anko.stinodes.ankoplication.util.HeightAnimation
+import com.anko.stinodes.ankoplication.web.IMAGE_URL
+import com.anko.stinodes.ankoplication.widget.AspectRatioFrameLayout.Side.WIDTH
 import com.anko.stinodes.ankoplication.widget.ToggleableNestScrollView
+import com.squareup.picasso.Picasso
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 
 class DetailFragmentUI: AnkoComponent<DetailFragment> {
 
     companion object {
-        val COLLAPSED_HEIGHT = 180
-        val EXPANDED_HEIGHT = 350
+        val COLLAPSED_HEIGHT = 1
+        val EXPANDED_HEIGHT = 200
     }
+
+    lateinit var infoCard: ViewGroup
+    lateinit var infoCardImage: ImageView
+
+    lateinit var infoHeading: ViewGroup
+    lateinit var title: TextView
+    lateinit var expandButton: Button
+
+    lateinit var infoDetailsContainer: ViewGroup
+    lateinit var infoDetails: ViewGroup
+
+    lateinit var rating: LinearLayout
+    lateinit var releaseYear: TextView
+    lateinit var episodes: TextView
+    lateinit var tags: ViewGroup
+    lateinit var description: TextView
 
     lateinit var parentView: ViewGroup
     lateinit var titleView: TextView
     lateinit var infoContainer: ViewGroup
-    lateinit var description: TextView
     lateinit var extendedContainer: ViewGroup
     lateinit var contentContainer: ViewGroup
     lateinit var extendedGradientView: View
-    lateinit var expandButton: ImageButton
     lateinit var scrollingContainer: ToggleableNestScrollView
     lateinit var episodeRecycler: RecyclerView
     lateinit var emptyMessage: ViewGroup
@@ -41,38 +63,85 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
     val episodeScrollListener: OnScrollListener = object: OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
-            if (newState == SCROLL_STATE_DRAGGING)
-                collapseInfo()
+//            if (newState == SCROLL_STATE_DRAGGING)
+//                collapseInfo()
+        }
+    }
+
+    fun bindCardImage(url: String, context: Context) {
+        Picasso.with(context)
+                .load("${IMAGE_URL}wallpaper/2/$url")
+                .fit()
+                .asRoundedRect(10f, bottomLeft = false, bottomRight = false)
+                .into(infoCardImage)
+    }
+
+    fun bindInfo(anime: DetailedAnime) {
+        title.text = anime.info!!.title
+        releaseYear.text = anime.info!!.dateToString()
+        bindRating(anime.info!!.score!!)
+    }
+    fun bindRating(score: Float) {
+        with(rating) {
+            linearLayout {
+                var i = 1
+                val mod = score % 1
+                val starSize = 14
+                gravity = Gravity.RIGHT or Gravity.END
+
+                while (i < score) {
+
+                    imageView {
+                        imageResource = com.anko.stinodes.ankoplication.R.drawable.star
+                    }.lparams(height = dip(starSize), width = dip(starSize)) {
+                        setMargins(0, 0, 2, 0)
+                        gravity = android.view.Gravity.CENTER_VERTICAL or android.view.Gravity.END
+                    }
+
+                    i++
+                }
+                if (mod > 0) {
+                    frameLayout {
+                        imageView {
+                            imageResource = com.anko.stinodes.ankoplication.R.drawable.star
+                        }.lparams(height = dip(starSize), width = dip(starSize)) {
+                        }
+                    }.lparams(width = dip(starSize * mod)) {
+                        gravity = android.view.Gravity.CENTER_VERTICAL or android.view.Gravity.END
+                        setMargins(0, 0, 2, 0)
+                    }
+                }
+            }
         }
     }
 
     fun expandInfo() {
-        extendedContainer.startAnimation(
+        Log.d("PRESSED", "SHOULD EXPAND")
+        infoDetailsContainer.startAnimation(
                 HeightAnimation(
-                        extendedContainer,
+                        infoDetailsContainer,
                         Math.min(
-                                extendedContainer.dip(EXPANDED_HEIGHT),
-                                contentContainer.measuredHeight
+                                infoDetailsContainer.dip(EXPANDED_HEIGHT),
+                                infoDetailsContainer.dip(EXPANDED_HEIGHT)
+//                                infoDetails.measuredHeight
                         ),
                         300
                 )
         )
-        scrollingContainer.scrollable = true
         expandButton.onClick { collapseInfo() }
-        episodeRecycler.addOnScrollListener(episodeScrollListener)
+//        scrollingContainer.scrollable = true
+//        episodeRecycler.addOnScrollListener(episodeScrollListener)
     }
     fun collapseInfo() {
-        extendedContainer.startAnimation(
+        infoDetailsContainer.startAnimation(
                 HeightAnimation(
-                        extendedContainer,
-                        extendedContainer.dip(COLLAPSED_HEIGHT),
+                        infoDetailsContainer,
+                        COLLAPSED_HEIGHT,
                         300
                 )
         )
-        scrollingContainer.smoothScrollTo(0, 0)
-        scrollingContainer.scrollable = false
         expandButton.onClick { expandInfo() }
-        episodeRecycler.removeOnScrollListener(episodeScrollListener)
+//        episodeRecycler.removeOnScrollListener(episodeScrollListener)
     }
 
     override fun createView(ui: AnkoContext<DetailFragment>): View = with(ui) {
@@ -80,72 +149,173 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
             lparams(width = matchParent, height = matchParent)
             parentView = verticalLayout {
 
-                extendedContainer = relativeLayout {
-                    backgroundResource = R.drawable.primary_background_gradient
+                // CARD
+                infoCard = verticalLayout {
+                    backgroundResource = R.drawable.primary_filled_roundedrect
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                         elevation = 8f
 
-                    scrollingContainer = toggleableNestScrollView {
-                        scrollable = false
+                    // IMAGE
+                    frameLayout {
+                        aspectRatioFrameLayout {
+                            aspectRatio = .57f
+                            fixedSide = WIDTH
 
-                        contentContainer = verticalLayout {
-                            padding = dimen(R.dimen.margin)
-                            bottomPadding = dip(80)
+                            infoCardImage = imageView {
 
-                            titleView = textView {
-                                lines = 1
-                                textSize = 22f
-                                setTypeface(typeface, Typeface.BOLD)
+                            }.lparams(width = matchParent, height = matchParent)
+
+                        }.lparams(width = matchParent)
+                    }.lparams(width = matchParent)
+
+                    // INFO
+                    verticalLayout {
+
+                        infoHeading = linearLayout {
+                            topPadding = dip(8)
+                            bottomPadding = dip(8)
+                            leftPadding = dip(24)
+                            rightPadding = dip(24)
+
+                            gravity = Gravity.CENTER_VERTICAL
+
+                            title = textView {
+                                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                                    letterSpacing = .015f
                                 textColor = ContextCompat.getColor(context, R.color.white)
-                                gravity = Gravity.CENTER
-                            }.lparams(width = matchParent)
-
-                            infoContainer = verticalLayout {
-                                leftPadding = dimen(R.dimen.margin)
-                                rightPadding = dimen(R.dimen.margin)
+                                textSize = 18f
+                                setTypeface(typeface, Typeface.BOLD)
+                                alpha = 0.9f
                             }.lparams(width = matchParent) {
-                                leftMargin = dimen(R.dimen.margin_small)
-                                rightMargin = dimen(R.dimen.margin_small)
+                                weight = 1f
                             }
 
-                            verticalLayout {
-                                rightPadding = dimen(R.dimen.margin)
-                                leftPadding = dimen(R.dimen.margin)
+                            expandButton = button {
+                                backgroundColor = ContextCompat.getColor(context, R.color.transparent)
+                                text = "More"
+                                textSize = 15f
+                                textColor = ContextCompat.getColor(context, R.color.white)
+                                alpha = 0.6f
+                                setTypeface(typeface, Typeface.BOLD)
+                                gravity = Gravity.RIGHT or Gravity.END or Gravity.CENTER_VERTICAL
 
-                                description = textView {
-                                    topPadding = dimen(R.dimen.margin_small)
-                                    textSize = 13f
-                                    textColor = ContextCompat.getColor(context, R.color.white2)
-                                    gravity = Gravity.FILL_HORIZONTAL
+                                onClick { expandInfo() }
+                            }.lparams() {
+                                gravity = Gravity.RIGHT or Gravity.END or Gravity.CENTER_VERTICAL
+                            }
+
+                        }.lparams(width = matchParent)
+
+
+                        //Container
+                        infoDetailsContainer = relativeLayout {
+
+                            infoDetails = verticalLayout {
+                                leftPadding = dip(40)
+                                rightPadding = dip(40)
+
+                                // Rating
+                                linearLayout {
+
+                                    bottomPadding = dip(4)
+
+                                    textView {
+
+                                        text = "Score"
+                                        infoTextStyling(this, true)
+
+                                    }.lparams(width = matchParent) {
+                                        weight = 1f
+                                    }
+
+                                    rating = linearLayout {
+                                        gravity = Gravity.RIGHT or Gravity.END
+                                    }.lparams(width = matchParent) {
+                                        weight = 1f
+                                        gravity = Gravity.RIGHT or Gravity.END
+                                    }
+
                                 }.lparams(width = matchParent)
 
-                            }.lparams(width = matchParent) {
-                                rightMargin = dimen(R.dimen.margin_small)
-                                leftMargin = dimen(R.dimen.margin_small)
-                            }
-                        }
-                    }.lparams(width = matchParent, height = matchParent) {
-                        alignWithParent = true
-                    }
+                                //Year
+                                linearLayout {
 
-                    extendedGradientView = frameLayout {
-                        backgroundResource = R.drawable.primary_transparent_gradient
+                                    topPadding = dip(4)
+                                    bottomPadding = dip(4)
 
-                        onClick { expandButton.performClick() }
+                                    textView {
 
-                        expandButton = imageButton {
-                            backgroundResource = R.drawable.design_fab_background
+                                        text = "Airing Year"
+                                        infoTextStyling(this, true)
 
-                            onClick { expandInfo() }
-                        }.lparams(height = dip(32), width = dip(32)) {
-                            gravity = Gravity.CENTER
-                        }
+                                    }.lparams(width = matchParent) {
+                                        weight = 1f
+                                    }
+                                    releaseYear = textView {
 
-                    }.lparams(width = matchParent, height = dip(64)) {
-                        alignParentBottom()
-                    }
+                                        text = "-"
+                                        infoTextStyling(this, false)
 
-                }.lparams(width = matchParent, height = dip(180))
+                                    }.lparams(width = matchParent) {
+                                        weight = 1f
+                                        gravity = Gravity.RIGHT or Gravity.END
+                                    }
+
+                                }.lparams(width = matchParent)
+
+                                //Episodes
+                                linearLayout {
+
+                                    topPadding = dip(4)
+                                    bottomPadding = dip(4)
+
+                                    textView {
+
+                                        text = "Episodes"
+                                        infoTextStyling(this, true)
+
+                                    }.lparams(width = matchParent) {
+                                        weight = 1f
+                                    }
+                                    episodes = textView {
+
+                                        text = "-"
+                                        infoTextStyling(this, false)
+
+                                    }.lparams(width = matchParent) {
+                                        weight = 1f
+                                        gravity = Gravity.RIGHT or Gravity.END
+                                    }
+
+                                }.lparams(width = matchParent)
+
+                                //Tags
+                                horizontalScrollView {
+                                    tags = linearLayout {
+
+                                    }
+                                }.lparams(width = matchParent)
+
+                                //Description
+                                scrollView {
+                                    description = textView {
+                                        textColor = ContextCompat.getColor(context, R.color.white)
+                                        textSize = 10f
+                                    }
+                                }.lparams(width = matchParent, height = matchParent) {
+                                    weight = 1f
+                                }
+
+                            }.lparams(width = matchParent, height = matchParent)
+
+                        }.lparams( width = matchParent, height = dip(COLLAPSED_HEIGHT))
+
+                    }.lparams(width = matchParent)
+
+
+                }.lparams(width = matchParent) {
+                    margin = dip(10)
+                }
 
                 episodeRecycler = recyclerView {
                     padding = dimen(R.dimen.margin)
@@ -174,59 +344,19 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
         }
     }
 
-    fun infoField(viewgroup: ViewGroup, key: String, value: String) = with(viewgroup) {
-        linearLayout {
-            lparams(width = matchParent) {
-                topMargin = dimen(R.dimen.margin_small)
-                bottomMargin = dimen(R.dimen.margin_small)
-            }
-            textView {
-                lines = 1
-                textColor = ContextCompat.getColor(context, R.color.white2)
-                alpha = 0.7f
-                textSize = 14f
-                setTypeface(typeface, Typeface.NORMAL)
-                gravity = Gravity.START or Gravity.LEFT
-                text = key
-            }.lparams {
-                weight = 1f
-            }
-            textView {
-                lines = 1
-                textColor = ContextCompat.getColor(context, R.color.white2)
-                alpha = 0.9f
-                textSize = 14f
-                setTypeface(typeface, Typeface.NORMAL)
-                gravity = Gravity.END or Gravity.RIGHT
-                text = value
-            }.lparams() {
-                weight = 1f
-            }
+    fun infoTextStyling(view: TextView, isLabel: Boolean) = with(view) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            letterSpacing = .03f
+
+        if (isLabel) {
+            alpha = 0.7f
         }
-    }
-    fun infoField(viewgroup: ViewGroup, key: String, value: (ViewGroup) -> ViewGroup) = with(viewgroup) {
-        linearLayout {
-            lparams(width = matchParent) {
-                topMargin = dimen(R.dimen.margin_small)
-                bottomMargin = dimen(R.dimen.margin_small)
-            }
-            textView {
-                lines = 1
-                textColor = ContextCompat.getColor(context, R.color.white2)
-                alpha = 0.7f
-                textSize = 14f
-                setTypeface(typeface, Typeface.NORMAL)
-                gravity = Gravity.START or Gravity.LEFT
-                text = key
-            }.lparams {
-                weight = 1f
-            }
-            relativeLayout {
-                gravity = Gravity.END or Gravity.RIGHT
-                value(this@relativeLayout)
-            }.lparams() {
-                weight = 1f
-            }
+        else {
+            gravity = Gravity.RIGHT or Gravity.END
+            alpha = 0.9f
         }
+
+        textSize = 14f
+        textColor = ContextCompat.getColor(context, R.color.white2)
     }
 }

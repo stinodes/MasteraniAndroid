@@ -8,8 +8,11 @@
                 android:bottomRightRadius="8dp"
                 android:topLeftRadius="8dp"
                 android:topRightRadius="8dp"/>
-            <solid
-                android:color="@color/colorPrimary"/>
+            <gradient
+                android:angle="0"
+                android:startColor="@color/primary_gradient_start"
+                android:endColor="@color/primary_gradient_end"
+                android:type="linear"/>
         </shape>
     </item>
 </selector>

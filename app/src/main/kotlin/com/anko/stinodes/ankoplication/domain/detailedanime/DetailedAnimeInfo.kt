@@ -29,4 +29,26 @@ class DetailedAnimeInfo {
             else if (episodeLength != null)
                 "eps of ${episodeLength} min."
             else "Not available."
+
+    fun dateToString(): String {
+        if (startedAiringDate == null)
+            return "-"
+        val cal = Calendar.getInstance()
+        var start: Int
+        var finish: Int
+
+        cal.time = startedAiringDate
+        start = cal.get(Calendar.YEAR)
+
+        if (finishedAiringDate == null)
+            return "$start - ?"
+
+        cal.time = finishedAiringDate
+        finish = cal.get(Calendar.YEAR)
+
+        if (start == finish)
+            return "$start"
+
+        return "$start - $finish"
+    }
 }

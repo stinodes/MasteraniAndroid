@@ -21,6 +21,7 @@ import org.jetbrains.anko.*
 class EpisodeViewHolderUI(): AnkoComponent<ViewGroup> {
 
     var episode: Episode? = null
+    var imageContainer: ViewGroup? = null
     var image: ImageView? = null
     var title: TextView? = null
     var epNum: TextView? = null
@@ -30,57 +31,41 @@ class EpisodeViewHolderUI(): AnkoComponent<ViewGroup> {
             Picasso.with(context)
                     .load("${IMAGE_URL}episodes/${episode!!.thumbnail}")
                     .fit()
-                    .asRoundedRect(2.5f)
+                    .centerCrop()
+                    .asRoundedRect(2.5f, topLeft = false, bottomLeft = false)
                     .into(image)
     }
 
     override fun createView(ui: AnkoContext<ViewGroup>): View = with (ui) {
-        verticalLayout {
+        linearLayout {
             lparams(width = matchParent) {
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    marginStart = dip(4)
-                    marginEnd = dip(4)
-                }
-                leftMargin = dip(4)
-                rightMargin = dip(4)
-                topMargin = dip(4)
-                bottomMargin = dip(4)
+                bottomMargin = dip(12)
             }
-            aspectRatioFrameLayout {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                elevation = 8f
+            backgroundResource = R.drawable.dark_card
+
+            linearLayout {
+                gravity = Gravity.CENTER
+                epNum = textView {
+                    textSize = 16f
+                    textColor = ContextCompat.getColor(context, R.color.white)
+                    alpha = 0.7f
+                    setTypeface(typeface, Typeface.BOLD)
+                    gravity = Gravity.CENTER
+                }
+            }.lparams(width = dip(45), height = matchParent)
+
+            imageContainer = aspectRatioFrameLayout {
                 fixedSide = WIDTH
-                aspectRatio = 0.56f
+                aspectRatio = 0.2f
 
                 image = imageView {
                     id = R.id.releaseWallpaper
-                }
-            }.lparams(width = matchParent)
-            linearLayout {
-                padding = dip(4)
-                title = textView {
-                    lines = 1
-                    textColor = ContextCompat.getColor(context, R.color.white)
-                    textSize = 12f
-                    alpha = 0.8f
-                    setTypeface(typeface, Typeface.BOLD)
-                }.lparams() {
-                    weight = 1f
+                    scaleType = ImageView.ScaleType.CENTER_CROP
                 }
 
-                epNum = textView {
-                    lines = 1
-                    textColor = ContextCompat.getColor(context, R.color.white2)
-                    textSize = 12f
-                    alpha = 0.6f
-                    setTypeface(typeface, Typeface.BOLD)
-                    leftPadding = dip(4)
-                }.lparams()
-            }
-            view {
-                backgroundResource = R.color.colorPrimary
-                alpha = 0.5f
-            }.lparams(width = dip(64), height = dip(1)) {
-                gravity = Gravity.CENTER_HORIZONTAL
-            }
+            }.lparams(width = matchParent)
         }
     }
 }

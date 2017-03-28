@@ -6,7 +6,6 @@ import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.OnScrollListener
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.anko.stinodes.ankoplication.R
+import com.anko.stinodes.ankoplication.domain.Genre
 import com.anko.stinodes.ankoplication.domain.detailedanime.DetailedAnime
 import com.anko.stinodes.ankoplication.ext.asRoundedRect
 import com.anko.stinodes.ankoplication.ext.aspectRatioFrameLayout
@@ -47,7 +47,7 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
     lateinit var rating: LinearLayout
     lateinit var releaseYear: TextView
     lateinit var episodes: TextView
-    lateinit var tags: ViewGroup
+    lateinit var genres: ViewGroup
     lateinit var description: TextView
 
     lateinit var parentView: ViewGroup
@@ -79,7 +79,36 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
     fun bindInfo(anime: DetailedAnime) {
         title.text = anime.info!!.title
         releaseYear.text = anime.info!!.dateToString()
+        episodes.text = anime.info!!.episodesToString()
+        description.text = anime.info!!.synopsis
+        bindGenres(anime.genres!!)
         bindRating(anime.info!!.score!!)
+    }
+    fun bindGenres(genresList: List<Genre>) {
+        with(genres) {
+            genresList.forEach {
+                frameLayout {
+                    backgroundResource = R.drawable.primary_gradient_border_pill
+                    topPadding = dip(3.5f)
+                    bottomPadding = dip(3.5f)
+                    leftPadding = dip(6.5f)
+                    rightPadding = dip(6.5f)
+
+                    textView {
+                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                            letterSpacing = .02f
+                        text = it.name
+                        textSize = 11f
+                        textColor = ContextCompat.getColor(context, R.color.white)
+
+                    }
+                }.layoutParams = with(LinearLayout.LayoutParams(wrapContent, wrapContent)) {
+                    leftMargin = dip(3)
+                    rightMargin = dip(3)
+                    this
+                }
+            }
+        }
     }
     fun bindRating(score: Float) {
         with(rating) {
@@ -116,14 +145,15 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
     }
 
     fun expandInfo() {
-        Log.d("PRESSED", "SHOULD EXPAND")
+        infoDetails.measure(View.MeasureSpec.makeMeasureSpec(infoDetailsContainer.measuredWidth, View.MeasureSpec.AT_MOST),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
         infoDetailsContainer.startAnimation(
                 HeightAnimation(
                         infoDetailsContainer,
                         Math.min(
                                 infoDetailsContainer.dip(EXPANDED_HEIGHT),
-                                infoDetailsContainer.dip(EXPANDED_HEIGHT)
-//                                infoDetails.measuredHeight
+                                infoDetails.measuredHeight
                         ),
                         300
                 )
@@ -182,6 +212,7 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
                             title = textView {
                                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                                     letterSpacing = .015f
+                                maxLines = 2
                                 textColor = ContextCompat.getColor(context, R.color.white)
                                 textSize = 18f
                                 setTypeface(typeface, Typeface.BOLD)
@@ -208,9 +239,13 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
 
 
                         //Container
-                        infoDetailsContainer = relativeLayout {
+                        infoDetailsContainer = scrollView {
+
+                            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                                scrollBarSize = dip(1)
 
                             infoDetails = verticalLayout {
+
                                 leftPadding = dip(40)
                                 rightPadding = dip(40)
 
@@ -291,22 +326,26 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
 
                                 //Tags
                                 horizontalScrollView {
-                                    tags = linearLayout {
-
+                                    isHorizontalScrollBarEnabled = false
+                                    genres = linearLayout {
+                                        topPadding = dip(4f)
                                     }
                                 }.lparams(width = matchParent)
 
                                 //Description
-                                scrollView {
+                                frameLayout {
+                                    topPadding = dip(8)
+                                    bottomPadding = dip(20)
                                     description = textView {
                                         textColor = ContextCompat.getColor(context, R.color.white)
-                                        textSize = 10f
+                                        infoTextStyling(this, true)
+                                        alpha = .9f
                                     }
                                 }.lparams(width = matchParent, height = matchParent) {
                                     weight = 1f
                                 }
 
-                            }.lparams(width = matchParent, height = matchParent)
+                            }.lparams(width = matchParent, height = wrapContent)
 
                         }.lparams( width = matchParent, height = dip(COLLAPSED_HEIGHT))
 
@@ -315,6 +354,7 @@ class DetailFragmentUI: AnkoComponent<DetailFragment> {
 
                 }.lparams(width = matchParent) {
                     margin = dip(10)
+                    bottomMargin = 0
                 }
 
                 episodeRecycler = recyclerView {

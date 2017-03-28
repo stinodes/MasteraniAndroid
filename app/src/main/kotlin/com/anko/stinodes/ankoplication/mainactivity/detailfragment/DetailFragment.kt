@@ -1,24 +1,19 @@
 package com.anko.stinodes.ankoplication.mainactivity.detailfragment
 
-import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.anko.stinodes.ankoplication.R
 import com.anko.stinodes.ankoplication.domain.EpisodeParcelable
 import com.anko.stinodes.ankoplication.domain.detailedanime.DetailedAnime
-import com.anko.stinodes.ankoplication.domain.detailedanime.DetailedAnimeInfo
 import com.anko.stinodes.ankoplication.domain.detailedanime.Episode
 import com.anko.stinodes.ankoplication.mainactivity.MainActivity
 import com.anko.stinodes.ankoplication.mainactivity.detailfragment.ui.DetailFragmentUI
 import com.anko.stinodes.ankoplication.web.MAWrapper
-import org.jetbrains.anko.*
+import org.jetbrains.anko.AnkoContext
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
@@ -86,9 +81,10 @@ class DetailFragment(val args: Bundle): Fragment() {
 
         ui.bindCardImage(anime.getWallpaper().file!!, context)
         ui.bindInfo(anime)
+        bindEpisodeData(anime.episodes!!)
     }
 
-    fun bindEpisodeData(episodes: List<Episode>) {
+    fun bindEpisodeData(episodes: List<Episode> = listOf()) {
         ui.episodeRecycler.adapter =
                 EpisodesAdapter(
                         activity,

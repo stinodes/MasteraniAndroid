@@ -50,9 +50,6 @@ class HomeFragment(val args: Bundle): Fragment() {
 
     override fun onResume() {
         with (activity as MainActivity) {
-            setToolbarFragment(
-                    getToolbarFragment(MainActivity.FragmentView.Home)
-            )
             ui.tabs.setupWithViewPager(this@HomeFragment.ui.pager)
             ui.expandTabs()
         }

@@ -64,7 +64,6 @@ class DetailFragment(val args: Bundle): Fragment() {
 
     override fun onResume() {
         with (activity as MainActivity) {
-            setToolbarFragment(null)
             ui.collapseTabs()
             ui.appBar.setExpanded(false, true)
         }
